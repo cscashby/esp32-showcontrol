@@ -22,7 +22,7 @@ const long DEBOUNCE_TIME = 100;
 
 // PIN, state, lastChangeMillis
 LED go_led = { 33, false, -1 };
-LED stop_led = { 15, false, -1 };
+LED stop_led = { 3, false, -1 };
 LED prev_led = { 4, false, -1 };
 LED next_led = { 13, false, -1 };
 // PIN, pressCount, pressed, debounceMillis, led
@@ -77,7 +77,7 @@ void loop() {
           tft.clearScreen();
           tft.setCursor(0, 0);
           tft.setTextColor(WHITE);
-          tft.setTextScale(1);
+          tft.setTextScale(4);
           tft.println(names[c]);
           buttons[c]->pressed = false;
         }
