@@ -31,7 +31,7 @@ const unsigned long QLAB_KEEPALIVE_INTERVAL = 30000;
 unsigned long qlabKeepAliveTimer;
 bool oscHeartbeatState = false;
 OscWiFi osc;
-QueueArray <char*> oscMessagesPending;
+QueueArray <char*> oscStringsPending;
 
 // LED and button variables
 const long LED_TIME = 1000;
@@ -99,13 +99,23 @@ void IRAM_ATTR isr(void* arg) {
       if( m == "" )
         break;
       Serial.printf("sending %s (%d), ", m, i-1);
-      oscMessagesPending.enqueue(m);
+      oscStringsPending.enqueue(m);
     }
     Serial.println();
     digitalWrite(s->led->PIN, !s->led->state);
   }
 }
 
+void sendOscRegularCommands() {
+    OscMessage m1(HOST_IP, HOST_PORT, "/updates");
+    m1.push(1);
+    osc.send(m1);
+    OscMessage m2(HOST_IP, HOST_PORT, "/alwaysReply");
+    m2.push(1);
+    osc.send(m2);
+}
+
+// BEGIN Arduino standard functions
 void setup() {
   delay(1000);
   Serial.begin(115200);
@@ -164,11 +174,10 @@ void setup() {
       Serial.println(m.arg<String>(0));
   });
   // Ask for updates and replies, and update screen with appropriate stuff
-  oscMessagesPending.enqueue("/cue/selected/displayName");
-  oscMessagesPending.enqueue("runningCues");
-  oscMessagesPending.enqueue("/displayName");
-  oscMessagesPending.enqueue("/updates 1");
-  oscMessagesPending.enqueue("/alwaysReply 1");
+  oscStringsPending.enqueue("/cue/selected/displayName");
+  oscStringsPending.enqueue("runningCues");
+  oscStringsPending.enqueue("/displayName");
+  sendOscRegularCommands();
 }
 
 void loop() {  
@@ -194,21 +203,17 @@ void loop() {
   portal.handleClient();
 
   // And deal with OSC
-  noInterrupts();
-  osc.parse(); // should be called
+  osc.parse();
   if( (now - oscHeartbeatTimer) >= OSC_HEARTBEAT_INTERVAL) {
-    oscMessagesPending.enqueue("/thump");
+    oscStringsPending.enqueue("/thump");
     oscHeartbeatTimer = millis();
   }
   if( (now - qlabKeepAliveTimer) >= QLAB_KEEPALIVE_INTERVAL) {
-    oscMessagesPending.enqueue("/updates 1");
-    oscMessagesPending.enqueue("/alwaysReply 1");
+    sendOscRegularCommands();
     qlabKeepAliveTimer = millis();
   }
-  while( !oscMessagesPending.isEmpty() ) {
-    char* msg = oscMessagesPending.dequeue();
-    OscMessage m(HOST_IP, HOST_PORT, msg);
+  while( !oscStringsPending.isEmpty() ) {
+    OscMessage m(HOST_IP, HOST_PORT, oscStringsPending.dequeue());
     osc.send(m);
   }
-  interrupts();
 }
