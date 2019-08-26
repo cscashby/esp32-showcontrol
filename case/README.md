@@ -12,4 +12,4 @@ Adafruit 0.96" display with 2mm clearance / 2mm thick inset for 1-2mm thick clea
 
 Source for 3d models:
 * Base: https://www.tinkercad.com/things/kWZmtJTIC6w-esp32-poe-gobutton
-* Top: https://www.tinkercad.com/things/igH9JtvcPgK-exquisite-stantia
+* Top: https://www.tinkercad.com/things/igH9JtvcPgK-esp32-gobutton-top
