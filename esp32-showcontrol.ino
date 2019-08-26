@@ -1,4 +1,5 @@
 #include <ArduinoOSC.h>
+#include <ArduinoJson.h>
 #include <WiFi.h>
 #include <WebServer.h>
 #include <SPI.h>
@@ -25,13 +26,16 @@ struct Button {
 const int OSC_PORT = 53001;
 const String HOST_IP = "192.168.5.104";
 const int HOST_PORT = 53000;
-const unsigned long OSC_HEARTBEAT_INTERVAL = 1000;
+const unsigned long OSC_HEARTBEAT_INTERVAL = 500;
 unsigned long oscHeartbeatTimer;
 const unsigned long QLAB_KEEPALIVE_INTERVAL = 30000;
 unsigned long qlabKeepAliveTimer;
 bool oscHeartbeatState = false;
 OscWiFi osc;
 QueueArray <char*> oscStringsPending;
+
+String runningCueID;
+String nextCueID;
 
 // LED and button variables
 const long LED_TIME = 1000;
@@ -107,12 +111,12 @@ void IRAM_ATTR isr(void* arg) {
 }
 
 void sendOscRegularCommands() {
-    OscMessage m1(HOST_IP, HOST_PORT, "/updates");
-    m1.push(1);
-    osc.send(m1);
-    OscMessage m2(HOST_IP, HOST_PORT, "/alwaysReply");
-    m2.push(1);
-    osc.send(m2);
+  OscMessage m1(HOST_IP, HOST_PORT, "/updates");
+  m1.push(1);
+  osc.send(m1);
+  OscMessage m2(HOST_IP, HOST_PORT, "/alwaysReply");
+  m2.push(1);
+  osc.send(m2);
 }
 
 // BEGIN Arduino standard functions
@@ -143,35 +147,81 @@ void setup() {
   osc.begin(OSC_PORT);
   oscHeartbeatTimer = millis();
   // add callbacks...
-  osc.subscribe("/reply/workspace/*/thump", [](OscMessage& m)
-  {
-      // We either draw or erase our heart
-      oscHeartbeatState = !oscHeartbeatState;
-      drawHeartbeat(oscHeartbeatState);
+  osc.subscribe("/reply/workspace/*/thump", [](OscMessage& m) {
+    // We either draw or erase our heart
+    oscHeartbeatState = !oscHeartbeatState;
+    drawHeartbeat(oscHeartbeatState);
   });
-  osc.subscribe("/update/workspace/*/cueList/*/playbackPosition", [](OscMessage& m)
-  {
-      // We copy the address as we don't want to break the string when we tokenise it
-      String addr = m.address();
-      char sizeString[] = "/update/workspace/FBD9B081-1C68-4C9C-8B74-98712F4DD90B/cueList/0FD30761-96F0-4C1E-AD1A-155DEB772604/playbackPosition";
-      char a[sizeof(sizeString)];
-      addr.toCharArray(a, sizeof(sizeString));
-      
-      Serial.print("Address: ");
-      Serial.println(a);
-      
-      char* p = strtok(a, "/");
-      char* split[6];
-      int i = 0;
-      while(p != NULL) {
-        split[i++] = p;
-        p = strtok(NULL, "/");
-      }
-      Serial.print("Workspace: ");
-      Serial.println(split[2]);
-      
-      Serial.print("Message: ");
-      Serial.println(m.arg<String>(0));
+  osc.subscribe("/reply/cue_id/*/displayName", [](OscMessage& m) {
+    // We copy the address as we don't want to break the string when we tokenise it
+    String addr = m.address();
+    char sizeString[] = "/reply/cue_id/0FD30761-96F0-4C1E-AD1A-155DEB772604/displayName";
+    // TODO Make this a function!
+    char a[sizeof(sizeString)];
+    addr.toCharArray(a, sizeof(sizeString));
+    
+    Serial.print("Address: ");
+    Serial.println(a);
+    
+    char* p = strtok(a, "/");
+    char* split[6];
+    int i = 0;
+    while(p != NULL) {
+      split[i++] = p;
+      p = strtok(NULL, "/");
+    }
+    String cueID = split[2];
+    Serial.print("Cue: ");
+    Serial.println(cueID);
+
+    String json = m.arg<String>(0);
+    // TODO: Make me generic
+    StaticJsonDocument<500> doc;
+    // Deserialize the JSON document
+    DeserializationError error = deserializeJson(doc, json);
+    const char* displayName;
+    // Test if parsing succeeds.
+    if (error) {
+      Serial.print(F("deserializeJson() failed: "));
+      Serial.println(error.c_str());
+      displayName = "error";
+    } else {
+      displayName = doc["data"]; // "2"
+    }
+    Serial.print("Display Name: ");
+    Serial.println(displayName);
+  });
+  osc.subscribe("/update/workspace/*/cueList/*/playbackPosition", [](OscMessage& m) {
+    // We copy the address as we don't want to break the string when we tokenise it
+    String addr = m.address();
+    char sizeString[] = "/update/workspace/FBD9B081-1C68-4C9C-8B74-98712F4DD90B/cueList/0FD30761-96F0-4C1E-AD1A-155DEB772604/playbackPosition";
+    // TODO Make this a function!
+    char a[sizeof(sizeString)];
+    addr.toCharArray(a, sizeof(sizeString));
+    
+    Serial.print("Address: ");
+    Serial.println(a);
+    
+    char* p = strtok(a, "/");
+    char* split[6];
+    int i = 0;
+    while(p != NULL) {
+      split[i++] = p;
+      p = strtok(NULL, "/");
+    }
+    Serial.print("Workspace: ");
+    Serial.println(split[2]);
+
+    String cueID = m.arg<String>(0);
+    Serial.print("Cue: ");
+    Serial.println(cueID);
+
+    if( cueID.length() > 0 ) {
+      String mstr = "/cue_id/" + cueID + "/displayName";
+      OscMessage m(HOST_IP, HOST_PORT, mstr);
+      osc.send(m);
+    }
+    nextCueID = cueID;
   });
   // Ask for updates and replies, and update screen with appropriate stuff
   oscStringsPending.enqueue("/cue/selected/displayName");
