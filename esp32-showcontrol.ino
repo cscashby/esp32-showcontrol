@@ -4,6 +4,7 @@
 #include <SPI.h>
 #include <SSD_13XX.h> //https://github.com/sumotoy/SSD_13XX
 #include <AutoConnect.h>
+#include <QueueArray.h>
 
 struct LED {
     const uint8_t PIN;
@@ -17,20 +18,24 @@ struct Button {
     bool pressed;
     unsigned long debounceMillis;
     LED* led;
+    const char** oscMessages;
 };
 
 // OSC variables (TODO: Externalise)
 const int OSC_PORT = 53001;
-const char* HOST_IP = "192.168.5.104";
+const String HOST_IP = "192.168.5.104";
 const int HOST_PORT = 53000;
 const unsigned long OSC_HEARTBEAT_INTERVAL = 1000;
 unsigned long oscHeartbeatTimer;
+const unsigned long QLAB_KEEPALIVE_INTERVAL = 30000;
+unsigned long qlabKeepAliveTimer;
 bool oscHeartbeatState = false;
 OscWiFi osc;
+QueueArray <char*> oscMessagesPending;
 
 // LED and button variables
 const long LED_TIME = 1000;
-const long DEBOUNCE_TIME = 100;
+const long DEBOUNCE_TIME = 500;
 #define COUNT 4
 
 // PIN, state, lastChangeMillis
@@ -38,14 +43,18 @@ LED go_led = { 33, false, -1 };
 LED stop_led = { 3, false, -1 };
 LED prev_led = { 4, false, -1 };
 LED next_led = { 13, false, -1 };
-// PIN, pressCount, pressed, debounceMillis, led
-Button go_button = {34, 0, false, -1, &go_led};
-Button stop_button = {35, 0, false, -1, &stop_led};
-Button prev_button = {36, 0, false, -1, &prev_led};
-Button next_button = {39, 0, false, -1, &next_led};
-
-char *names[] = { "go", "stop", "prev", "next" };
+const char* names[] = { "go", "stop", "prev", "next" };
 LED* leds[]= { &go_led, &stop_led, &prev_led, &next_led };
+// Needs empty string termination for iterator
+const char* buttonMessagesGo[] = {"/stop", "/runningOrPausedCues", "/go", ""};
+const char* buttonMessagesStop[] = {"/stop", "/runningOrPausedCues", ""};
+const char* buttonMessagesPrev[] = {"/stop", "/playhead/previous", "/runningOrPausedCues", ""};
+const char* buttonMessagesNext[] = {"/stop", "/playhead/next", "/runningOrPausedCues", ""};
+// PIN, pressCount, pressed, debounceMillis, led
+Button go_button = {34, 0, false, -1, &go_led, buttonMessagesGo};
+Button stop_button = {35, 0, false, -1, &stop_led, buttonMessagesStop};
+Button prev_button = {36, 0, false, -1, &prev_led, buttonMessagesPrev};
+Button next_button = {39, 0, false, -1, &next_led, buttonMessagesNext};
 Button* buttons[] = { &go_button, &stop_button, &prev_button, &next_button };
 
 // Display variables
@@ -82,6 +91,17 @@ void IRAM_ATTR isr(void* arg) {
     s->pressed = true;
     s->led->state = true;
     s->led->lastChangeMillis = millis();
+    char* m;
+    unsigned int i = 0;
+    Serial.print("Button pressed, ");
+    while( true ) {
+      m = (char *)s->oscMessages[i++];
+      if( m == "" )
+        break;
+      Serial.printf("sending %s (%d), ", m, i-1);
+      oscMessagesPending.enqueue(m);
+    }
+    Serial.println();
     digitalWrite(s->led->PIN, !s->led->state);
   }
 }
@@ -119,6 +139,36 @@ void setup() {
       oscHeartbeatState = !oscHeartbeatState;
       drawHeartbeat(oscHeartbeatState);
   });
+  osc.subscribe("/update/workspace/*/cueList/*/playbackPosition", [](OscMessage& m)
+  {
+      // We copy the address as we don't want to break the string when we tokenise it
+      String addr = m.address();
+      char sizeString[] = "/update/workspace/FBD9B081-1C68-4C9C-8B74-98712F4DD90B/cueList/0FD30761-96F0-4C1E-AD1A-155DEB772604/playbackPosition";
+      char a[sizeof(sizeString)];
+      addr.toCharArray(a, sizeof(sizeString));
+      
+      Serial.print("Address: ");
+      Serial.println(a);
+      
+      char* p = strtok(a, "/");
+      char* split[6];
+      int i = 0;
+      while(p != NULL) {
+        split[i++] = p;
+        p = strtok(NULL, "/");
+      }
+      Serial.print("Workspace: ");
+      Serial.println(split[2]);
+      
+      Serial.print("Message: ");
+      Serial.println(m.arg<String>(0));
+  });
+  // Ask for updates and replies, and update screen with appropriate stuff
+  oscMessagesPending.enqueue("/cue/selected/displayName");
+  oscMessagesPending.enqueue("runningCues");
+  oscMessagesPending.enqueue("/displayName");
+  oscMessagesPending.enqueue("/updates 1");
+  oscMessagesPending.enqueue("/alwaysReply 1");
 }
 
 void loop() {  
@@ -144,10 +194,21 @@ void loop() {
   portal.handleClient();
 
   // And deal with OSC
+  noInterrupts();
   osc.parse(); // should be called
   if( (now - oscHeartbeatTimer) >= OSC_HEARTBEAT_INTERVAL) {
-    OscMessage msg(HOST_IP, HOST_PORT, "/thump");
-    osc.send(msg);
+    oscMessagesPending.enqueue("/thump");
     oscHeartbeatTimer = millis();
   }
+  if( (now - qlabKeepAliveTimer) >= QLAB_KEEPALIVE_INTERVAL) {
+    oscMessagesPending.enqueue("/updates 1");
+    oscMessagesPending.enqueue("/alwaysReply 1");
+    qlabKeepAliveTimer = millis();
+  }
+  while( !oscMessagesPending.isEmpty() ) {
+    char* msg = oscMessagesPending.dequeue();
+    OscMessage m(HOST_IP, HOST_PORT, msg);
+    osc.send(m);
+  }
+  interrupts();
 }
