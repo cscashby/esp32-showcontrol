@@ -66,7 +66,7 @@ Button stop_button = {35, 0, false, -1, &stop_led, buttonMessagesStop};
 Button prev_button = {36, 0, false, -1, &prev_led, buttonMessagesPrev};
 Button next_button = {39, 0, false, -1, &next_led, buttonMessagesNext};
 Button* buttons[] = { &go_button, &stop_button, &prev_button, &next_button };
-#define LINE_LENGTH 7
+#define LINE_LENGTH 13
 
 // We use this to decode JSON
 StaticJsonDocument<5000> doc;
@@ -142,13 +142,13 @@ void cuesChanged() {
   tft.clearScreen();
   tft.setCursor(0, 0);
   tft.setTextColor(BLUE);
-  tft.setTextScale(2);
+  tft.setTextScale(1,2);
   tft.setFont(&mono_mid);
-  tft.println(truncateString(nextCue.displayName, 16));
+  tft.println(truncateString(nextCue.displayName, LINE_LENGTH));
   if( nextCue.displayName.length() <= LINE_LENGTH )
     tft.println();
   tft.setTextColor(GREEN);
-  tft.println(truncateString(runningCue.displayName, 16));
+  tft.println(truncateString(runningCue.displayName, LINE_LENGTH));
   drawHeartbeat(oscHeartbeatState);
 }
 
