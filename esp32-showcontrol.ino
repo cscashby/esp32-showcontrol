@@ -49,10 +49,10 @@ const long DEBOUNCE_TIME = 500;
 #define COUNT 4
 
 // PIN, state, lastChangeMillis
-LED go_led = { 33, false, -1 };
-LED stop_led = { 3, false, -1 };
-LED prev_led = { 4, false, -1 };
-LED next_led = { 13, false, -1 };
+LED go_led = { 0, false, -1 };
+LED stop_led = { 15, false, -1 };
+LED prev_led = { 16, false, -1 };
+LED next_led = { 32, false, -1 };
 const char* names[] = { "go", "stop", "prev", "next" };
 LED* leds[]= { &go_led, &stop_led, &prev_led, &next_led };
 // Needs empty string termination for iterator
@@ -72,9 +72,11 @@ Button* buttons[] = { &go_button, &stop_button, &prev_button, &next_button };
 StaticJsonDocument<5000> doc;
 
 // Display variables
+#define __SCL   14 //unused
+#define __SDA   2  //unused
 #define __CS    5  
-#define __DC    16 
-#define __RST   32
+#define __DC    4 
+#define __RST   3
 SSD_13XX tft = SSD_13XX(__CS, __DC, __RST);
 void drawHeartbeat(bool state) {
   if( state ) {
