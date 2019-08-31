@@ -9,6 +9,7 @@ class Display {
   public:
     Display();
     void heartBeat();
+    void brokenHeart();
   private:
     SSD_13XX* tft;
     bool heartBeatStatus = false;

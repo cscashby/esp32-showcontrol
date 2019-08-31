@@ -8,6 +8,6 @@ void setup() {
 }
 
 void loop() {
-  d.heartBeat();
-  delay(500);
+  d.brokenHeart();
+  delay(200);
 }
