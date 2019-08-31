@@ -14,7 +14,8 @@ Source for 3d models:
 * Base: https://www.tinkercad.com/things/kWZmtJTIC6w-esp32-poe-gobutton
 * Top
   * https://www.tinkercad.com/things/iRHtitwJItW-esp32-gobutton-top-bfb-diymore-version
-    * This is the version for a DIYmore 0.95" 90x64 screen. If this doesn't have enough pixels the Adafruit 0.96" may be better
+    * This is the version for a DIYmore 0.95" 90x64 screen. If this doesn't have enough pixels the Adafruit 0.96" may be better.
+    * NOTE when building this I realised that some of the screens I have have the display stuck in a slightly lower-than-marked position on the board. Unfortunately I did the design using one of these screens not the ones that are positioned correctly, so if you are building this, move the display around according to your ACTUAL screen before printing!
   * https://www.tinkercad.com/things/iRHtitwJItW-esp32-gobutton-top-bfb-adafruit-version
     * This is the version for an Adafruit 160x80 display with SD card. It's a bit more expensive, but has more pixels, which is nice.
   * Both of these are 'BFB' versions (Big ... Button) which I prefer as it's fairly obvious what to hit for 'go'...
