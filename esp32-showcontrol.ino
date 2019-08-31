@@ -46,34 +46,37 @@ CueDisplay nextCue;
 // LED and button variables
 const long LED_TIME = 1000;
 const long DEBOUNCE_TIME = 500;
-#define COUNT 4
+#define COUNT 5
 
 // PIN, state, lastChangeMillis
 LED go_led = { 0, false, -1 };
 LED stop_led = { 15, false, -1 };
+LED pause_led = { 13, false, -1 };
 LED prev_led = { 16, false, -1 };
 LED next_led = { 32, false, -1 };
-const char* names[] = { "go", "stop", "prev", "next" };
-LED* leds[]= { &go_led, &stop_led, &prev_led, &next_led };
+const char* names[] = { "go", "stop", "pause", "prev", "next" };
+LED* leds[]= { &go_led, &stop_led, &pause_led, &prev_led, &next_led };
 // Needs empty string termination for iterator
 const char* buttonMessagesGo[] = {"/stop", "/go", ""};
 const char* buttonMessagesStop[] = {"/stop", ""};
+const char* buttonMessagesPause[] = {"/pause", ""};
 const char* buttonMessagesPrev[] = {"/stop", "/playhead/previous", ""};
 const char* buttonMessagesNext[] = {"/stop", "/playhead/next", ""};
 // PIN, pressCount, pressed, debounceMillis, led
-Button go_button = {34, 0, false, -1, &go_led, buttonMessagesGo};
+Button go_button = {33, 0, false, -1, &go_led, buttonMessagesGo};
 Button stop_button = {35, 0, false, -1, &stop_led, buttonMessagesStop};
+Button pause_button = {34, 0, false, -1, &pause_led, buttonMessagesPause};
 Button prev_button = {36, 0, false, -1, &prev_led, buttonMessagesPrev};
 Button next_button = {39, 0, false, -1, &next_led, buttonMessagesNext};
-Button* buttons[] = { &go_button, &stop_button, &prev_button, &next_button };
+Button* buttons[] = { &go_button, &stop_button, &pause_button, &prev_button, &next_button };
 #define LINE_LENGTH 13
 
 // We use this to decode JSON
 StaticJsonDocument<5000> doc;
 
 // Display variables
-#define __SCL   14 //unused
-#define __SDA   2  //unused
+#define __SCL   14 //default / hard wired so unused
+#define __SDA   2  //default / hard wired so unused
 #define __CS    5  
 #define __DC    4 
 #define __RST   3
@@ -168,7 +171,7 @@ void setup() {
 
   // Get pins read for buttons and LEDs
   for( int c = 0; c < COUNT; c++ ) {
-    pinMode(buttons[c]->PIN, INPUT_PULLUP);
+    pinMode(buttons[c]->PIN, INPUT);
     attachInterruptArg(buttons[c]->PIN, isr, buttons[c], FALLING);
     pinMode(leds[c]->PIN, OUTPUT);
     digitalWrite(leds[c]->PIN, true);
