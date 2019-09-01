@@ -9,3 +9,6 @@ It communicates via one ore more QLab machines via OSC over UDP and (not yet imp
 
 The control box has a small display (0.94-0.96" with 3-4 lines of text) and will display currently playing and next cue, as well as a 'heartbeat' indicator to show QLab is running and accepting network traffic.
 
+The box wiring is currently soldered wires directly onto pushbuttons and LEDs, and soldered onto the OLED board.  [Pinouts are documented in a separate file](https://github.com/cscashby/esp32-showcontrol/blob/master/esp32-poe-iso-connections.md).
+
+NOTE the current codebase for all the features sort of working is in the single esp32-showcontrol.ino file.  This is being modularised and written in a much better way in the src/ folder, so check that out for the hopefully more decent code.
