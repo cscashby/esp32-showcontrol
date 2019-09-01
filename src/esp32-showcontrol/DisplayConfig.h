@@ -1,5 +1,5 @@
-#ifndef Config_h
-#define Config_h
+#ifndef DisplayConfig_h
+#define DisplayConfig_h
 
 // Display variables (all prefix LCD_)
 #define LCD_SCL   14 //default / hard wired so unused

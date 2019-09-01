@@ -1,10 +1,13 @@
 #include "Arduino.h"
-#include "Config.h"
 #include "Display.h"
 
 Display::Display() {
   tft = new SSD_13XX(LCD_CS, LCD_DC, LCD_RST);
   tft->begin();
+}
+
+void Display::loop() {
+  heartBeat();
 }
 
 void Display::heartBeat() {
