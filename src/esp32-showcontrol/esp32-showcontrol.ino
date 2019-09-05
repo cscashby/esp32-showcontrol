@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include "Display.h"
 #include "Network.h"
+#include "Config.h"
+#include "Button.h"
 
 Display d = Display();
 
@@ -23,6 +25,17 @@ void setup() {
   // uS units, so this is 1s
   timerAlarmWrite(timer, 1000000, true);
   timerAlarmEnable(timer);
+
+  for (unsigned i=0; i < Config::getConfig().buttons.size(); i++) {
+    Button b = Config::getConfig().buttons.at(i);
+    Serial.print(b.name); Serial.print(" -- ");
+    Serial.print("LED: "); Serial.print(b.LED_pin);
+    Serial.print(" Button: "); Serial.print(b.pin);
+    for (unsigned j=0; j < b.OSC_commands.size(); j++) {
+      Serial.print(" Command: "); Serial.print(b.OSC_commands.at(j));
+    }
+    Serial.println();
+  }
 }
 
 void loop() {
