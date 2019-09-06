@@ -15,16 +15,13 @@ class Config {
       Button* button;
       String string;
     };
-    
-//    struct Button {
-//      String name;
-//      uint8_t LED_pin;
-//      uint8_t Button_pin;
-//      std::vector<String> OSC_commands;
-//      OSC_subscription OSC_subscribe;
-//    };
 
+    struct network_config {
+      String hostname;
+    };
+    
     std::vector<Button> buttons;
+    network_config netConfig;
 
     static Config& getConfig() {
       static Config instance;

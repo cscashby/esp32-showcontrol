@@ -10,7 +10,7 @@ void Display::begin() {
 }
 
 void Display::loop() {
-  heartBeat();
+  
 }
 
 void Display::heartBeat() {

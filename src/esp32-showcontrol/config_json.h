@@ -1,5 +1,8 @@
 const char CONFIG_JSON[] PROGMEM = R"=====(
 {
+  "network": {
+    "hostname": "esp32-showcontrol"
+  },
   "buttons": {
     "go": {
       "LED_pin": 0,

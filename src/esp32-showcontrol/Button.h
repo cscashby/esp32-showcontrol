@@ -2,17 +2,22 @@
 #define Button_h
 
 #include <Arduino.h>
+#include <map>
+
+#include "const.h"
 
 class Button {
   public:
     Button() = delete;
-    Button(const char* name, const uint8_t pin, const uint8_t LED_pin)
-      : name(name), pin(pin), LED_pin(LED_pin)
-      {}
+    Button(const String n, const uint8_t p, const uint8_t l);
 
+    void begin();
     void loop();
+    void poll();
 
-    const char* name;
+    void IRAM_ATTR isr();
+
+    const String buttonName;
     const uint8_t pin;
     const uint8_t LED_pin;
     
@@ -21,6 +26,7 @@ class Button {
   private:
     bool pressed;
     unsigned long debounceMillis;
+    unsigned long ledLastChangeMillis;
 };
 
 #endif

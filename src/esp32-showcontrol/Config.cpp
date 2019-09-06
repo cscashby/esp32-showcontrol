@@ -13,7 +13,9 @@ Config::Config() {
   }
 
   //serializeJson(doc, Serial);
-
+  JsonObject network = doc.as<JsonObject>()["network"].as<JsonObject>();
+  netConfig.hostname = network["hostname"].as<char*>();
+  
   JsonObject buttons = doc.as<JsonObject>()["buttons"].as<JsonObject>();
   for( JsonPair kv : buttons ) {
     JsonObject button = kv.value().as<JsonObject>();

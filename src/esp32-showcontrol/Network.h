@@ -6,6 +6,7 @@
 #include <WebServer.h>
 #include <AutoConnect.h>
 #include "wwwroot.h"
+#include "config.h"
 #include "Display.h"
 
 class Network {

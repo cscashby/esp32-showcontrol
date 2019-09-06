@@ -11,8 +11,6 @@ void Network::WiFiEvent(WiFiEvent_t event)
   switch (event) {
     case SYSTEM_EVENT_ETH_START:
       Serial.println("ETH Started");
-      //set eth hostname here
-      ETH.setHostname("esp32-ethernet");
       break;
     case SYSTEM_EVENT_ETH_CONNECTED:
       Serial.println("ETH Connected");
@@ -57,7 +55,7 @@ void Network::WiFiEvent(WiFiEvent_t event)
       wifi_connected = false;
       break;
     default:
-      Serial.print("Unhandled WifiEvent: ");
+      Serial.print("WifiEvent: ");
       Serial.println(event);
       break;
   }
@@ -85,6 +83,10 @@ void Network::begin(Display d) {
   
   Network_webServer.on("/", Network::rootPage);
   Network_portal.onNotFound(Network::handle404);
+
+  AutoConnectConfig config;
+  config.hostName = Config::getConfig().netConfig.hostname;
+  Network_portal.config(config);
 
   if (Network_portal.begin()) {
     Serial.println("HTTP server:" + WiFi.localIP().toString());

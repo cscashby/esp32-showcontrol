@@ -3,16 +3,25 @@
 #include "Network.h"
 #include "Config.h"
 #include "Button.h"
+#include "const.h"
 
 Display d = Display();
 
-hw_timer_t *timer = NULL;
+hw_timer_t *heartbeatTimer = NULL;
+hw_timer_t *pollTimer = NULL;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
-void IRAM_ATTR onTimer() {
-  portENTER_CRITICAL_ISR(&timerMux);
-  d.loop();
-  portEXIT_CRITICAL_ISR(&timerMux);
+void IRAM_ATTR hearbeatTimerISR() {
+// Needed?
+//  portENTER_CRITICAL_ISR(&timerMux);
+  d.heartBeat();
+//  portEXIT_CRITICAL_ISR(&timerMux);
+}
+
+void IRAM_ATTR pollTimerISR() {
+  for (unsigned i=0; i < Config::getConfig().buttons.size(); i++) {
+    Config::getConfig().buttons.at(i).poll();
+  }
 }
 
 void setup() {
@@ -21,23 +30,19 @@ void setup() {
 
   d.begin();
   Network::begin(d);
-
-  timer = timerBegin(0, 80, true);
-  timerAttachInterrupt(timer, &onTimer, true);
-  // uS units, so this is 1s
-  timerAlarmWrite(timer, 1000000, true);
-  timerAlarmEnable(timer);
-
   for (unsigned i=0; i < Config::getConfig().buttons.size(); i++) {
-    Button b = Config::getConfig().buttons.at(i);
-    Serial.print(b.name); Serial.print(" -- ");
-    Serial.print("LED: "); Serial.print(b.LED_pin);
-    Serial.print(" Button: "); Serial.print(b.pin);
-    for (unsigned j=0; j < b.OSC_commands.size(); j++) {
-      Serial.print(" Command: "); Serial.print(b.OSC_commands.at(j));
-    }
-    Serial.println();
+    Config::getConfig().buttons.at(i).begin();
   }
+
+  heartbeatTimer = timerBegin(HEARTBEAT_TIMER, 80, true);
+  timerAttachInterrupt(heartbeatTimer, &hearbeatTimerISR, true);
+  timerAlarmWrite(heartbeatTimer, HEARTBEAT_TIME, true);
+  timerAlarmEnable(heartbeatTimer);
+
+  pollTimer = timerBegin(POLL_TIMER, 80, true);
+  timerAttachInterrupt(pollTimer, &pollTimerISR, true);
+  timerAlarmWrite(pollTimer, POLL_TIME, true);
+  timerAlarmEnable(pollTimer);
 }
 
 void loop() {
