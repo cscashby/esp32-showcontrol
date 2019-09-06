@@ -18,7 +18,9 @@ void IRAM_ATTR onTimer() {
 void setup() {
   delay(1000);
   Serial.begin(115200);
-  Network::begin();
+
+  d.begin();
+  Network::begin(d);
 
   timer = timerBegin(0, 80, true);
   timerAttachInterrupt(timer, &onTimer, true);

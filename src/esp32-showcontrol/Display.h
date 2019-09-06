@@ -9,10 +9,11 @@
 class Display {
   public:
     Display();
+    void begin();
     void loop();
+    SSD_13XX* tft;
     
   private:
-    SSD_13XX* tft;
     bool heartBeatStatus = false;
     
     void heartBeat();

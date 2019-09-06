@@ -6,6 +6,9 @@ Display::Display() {
   tft->begin();
 }
 
+void Display::begin() {
+}
+
 void Display::loop() {
   heartBeat();
 }
