@@ -30,6 +30,7 @@ class Config {
     struct timer_config {
       unsigned long led_flash_ms;
       unsigned long switch_debounce_ms;
+      unsigned long heartbeat_timeout_ms;
       uint64_t heartbeat_us;
       uint64_t poll_us;
     };

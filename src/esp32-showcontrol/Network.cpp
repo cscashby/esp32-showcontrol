@@ -62,25 +62,25 @@ void Network::WiFiEvent(WiFiEvent_t event)
   }
 }
 
-void Network::begin(Display d) {
+void Network::begin(Display* d) {
   eth_connected = false;
   wifi_connected = false;
   WiFi.onEvent(Network::WiFiEvent);
   
-  d.tft->clearScreen();
-  d.tft->setCursor(0, 0);
-  d.tft->setTextScale(1,2);
-  d.tft->setFont(&mono_mid);
-  d.tft->println();
-  d.tft->setTextColor(WHITE);
-  d.tft->println("-- Ethernet --");
+  d->tft->clearScreen();
+  d->tft->setCursor(0, 0);
+  d->tft->setTextScale(1,2);
+  d->tft->setFont(&mono_mid);
+  d->tft->println();
+  d->tft->setTextColor(WHITE);
+  d->tft->println("-- Ethernet --");
 
   ETH.begin();
   
-  d.tft->clearScreen();
-  d.tft->println();
-  d.tft->setTextColor(WHITE);
-  d.tft->println("   -- WiFi --");
+  d->tft->clearScreen();
+  d->tft->println();
+  d->tft->setTextColor(WHITE);
+  d->tft->println("   -- WiFi --");
   
   Network_webServer.on("/", Network::rootPage);
   Network_portal.onNotFound(Network::handle404);
@@ -93,7 +93,7 @@ void Network::begin(Display d) {
     Serial.println("HTTP server:" + WiFi.localIP().toString());
   }
 
-  d.tft->clearScreen();
+  d->tft->clearScreen();
 }
 
 void Network::loop() {

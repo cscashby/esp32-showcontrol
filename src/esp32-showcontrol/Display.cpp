@@ -13,23 +13,25 @@ void Display::loop() {
   
 }
 
-void Display::heartBeat() {
+void Display::heartbeat() {
   uint16_t col;
-  if( heartBeatStatus ) {
+  if( heartbeatStatus ) {
     col = LCD_HEART_COLOR;
   } else {
     col = LCD_BG_COLOR;
   }
+  tft->fillRect(LCD_HEART_X, LCD_HEART_Y, LCD_HEART_WIDTH, LCD_HEART_HEIGHT, LCD_BG_COLOR);
   tft->drawBitmap(LCD_HEART_X, LCD_HEART_Y, LCD_HEART, LCD_HEART_WIDTH, LCD_HEART_HEIGHT, col);
-  heartBeatStatus = !heartBeatStatus;
+  heartbeatStatus = !heartbeatStatus;
 }
 void Display::brokenHeart() {
   uint16_t col;
-  if( heartBeatStatus ) {
+  if( heartbeatStatus ) {
     col = LCD_BROKENHEART_COLOR;
   } else {
     col = LCD_BG_COLOR;
   }
+  tft->fillRect(LCD_BROKENHEART_X, LCD_BROKENHEART_Y, LCD_BROKENHEART_WIDTH, LCD_BROKENHEART_HEIGHT, LCD_BG_COLOR);
   tft->drawBitmap(LCD_BROKENHEART_X, LCD_BROKENHEART_Y, LCD_BROKENHEART, LCD_BROKENHEART_WIDTH, LCD_BROKENHEART_HEIGHT, col);
-  heartBeatStatus = !heartBeatStatus;
+  heartbeatStatus = !heartbeatStatus;
 }

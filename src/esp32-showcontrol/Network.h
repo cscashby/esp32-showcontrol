@@ -12,7 +12,7 @@ class Network {
   public:
     static void WiFiEvent(WiFiEvent_t event);
 
-    static void begin(Display d);
+    static void begin(Display* d);
     static void loop();
     
     static void rootPage();

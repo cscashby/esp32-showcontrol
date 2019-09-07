@@ -31,6 +31,7 @@ Config::Config() {
   JsonObject general = doc.as<JsonObject>()["general"].as<JsonObject>();
   timers.led_flash_ms = general["timers"].as<JsonObject>()["led_flash_ms"].as<unsigned long>();
   timers.switch_debounce_ms = general["timers"].as<JsonObject>()["switch_debounce_ms"].as<unsigned long>();
+  timers.heartbeat_timeout_ms = general["timers"].as<JsonObject>()["heartbeat_timeout_ms"].as<unsigned long>();
   timers.heartbeat_us = general["timers"].as<JsonObject>()["heartbeat_us"].as<uint64_t>();
   timers.poll_us = general["timers"].as<JsonObject>()["poll_us"].as<uint64_t>();
   

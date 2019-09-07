@@ -14,10 +14,7 @@ hw_timer_t *pollTimer = NULL;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
 void IRAM_ATTR hearbeatTimerISR() {
-// Needed?
-//  portENTER_CRITICAL_ISR(&timerMux);
-  d.heartBeat();
-//  portEXIT_CRITICAL_ISR(&timerMux);
+  OSC::heartbeat();
 }
 
 void IRAM_ATTR pollTimerISR() {
@@ -31,8 +28,8 @@ void setup() {
   //esp_log_level_set("*", ESP_LOG_DEBUG);
 
   d.begin();
-  Network::begin(d);
-  OSC::begin();
+  Network::begin(&d);
+  OSC::begin(&d);
   for (unsigned i=0; i < Config::getConfig().buttons.size(); i++) {
     Config::getConfig().buttons.at(i).begin();
   }

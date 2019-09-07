@@ -11,13 +11,12 @@ class Display {
     Display();
     void begin();
     void loop();
-    void heartBeat();
+    void heartbeat();
+    void brokenHeart();
     SSD_13XX* tft;
     
   private:
-    bool heartBeatStatus = false;
-    
-    void brokenHeart();
+    bool heartbeatStatus = false;
 };
 
 #endif

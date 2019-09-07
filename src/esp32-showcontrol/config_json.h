@@ -14,7 +14,8 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
     "timers" : {
       "led_flash_ms": 1000,
       "switch_debounce_ms": 200,
-      "heartbeat_us": 1000000,
+      "heartbeat_timeout_ms": 1500,
+      "heartbeat_us": 500000,
       "poll_us": 100000
     }
   },
