@@ -6,6 +6,8 @@
 
 #include "const.h"
 
+class Button;
+
 class Button {
   public:
     Button() = delete;

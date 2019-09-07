@@ -1,4 +1,5 @@
 #include "Button.h"
+#include "config.h"
 
 static std::map<uint8_t, Button*> buttonMap;
 
@@ -21,7 +22,7 @@ void Button::begin() {
 
 void IRAM_ATTR Button::isr() {
   unsigned long now = millis();
-  if( (now - debounceMillis) >= DEBOUNCE_TIME ) {
+  if( (now - debounceMillis) >= Config::getConfig().timers.switch_debounce_ms ) {
     debounceMillis = millis();
     pressed = true;
     digitalWrite(LED_pin, true);
@@ -33,14 +34,14 @@ void IRAM_ATTR Button::isr() {
   }
 }
 
-void Button::loop() {
-  
-}
-
 void Button::poll() {
   unsigned long now = millis();
-  if( (now - ledLastChangeMillis) > LED_TIME ) {
+  if( (now - ledLastChangeMillis) > Config::getConfig().timers.led_flash_ms ) {
     digitalWrite(LED_pin, false);
     ledLastChangeMillis = 0;
   }
+}
+
+void Button::loop() {
+  
 }

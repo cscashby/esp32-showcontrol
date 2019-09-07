@@ -3,6 +3,14 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
   "network": {
     "hostname": "esp32-showcontrol"
   },
+  "general": {
+    "timers" : {
+      "led_flash_ms": 1000,
+      "switch_debounce_ms": 200,
+      "heartbeat_us": 1000000,
+      "poll_us": 100000
+    }
+  },
   "buttons": {
     "go": {
       "LED_pin": 0,

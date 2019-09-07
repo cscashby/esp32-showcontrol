@@ -1,4 +1,5 @@
 #include "Network.h"
+#include "config.h"
 
 WebServer Network_webServer;
 AutoConnect Network_portal(Network_webServer);

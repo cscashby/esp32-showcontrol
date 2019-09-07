@@ -10,7 +10,6 @@
 
 class Config {
   public:
-  
     struct OSC_subscription {
       Button* button;
       String string;
@@ -19,8 +18,16 @@ class Config {
     struct network_config {
       String hostname;
     };
+
+    struct timer_config {
+      unsigned long led_flash_ms;
+      unsigned long switch_debounce_ms;
+      uint64_t heartbeat_us;
+      uint64_t poll_us;
+    };
     
     std::vector<Button> buttons;
+    timer_config timers;
     network_config netConfig;
 
     static Config& getConfig() {

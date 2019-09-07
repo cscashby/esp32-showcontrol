@@ -16,6 +16,12 @@ Config::Config() {
   JsonObject network = doc.as<JsonObject>()["network"].as<JsonObject>();
   netConfig.hostname = network["hostname"].as<char*>();
   
+  JsonObject general = doc.as<JsonObject>()["general"].as<JsonObject>();
+  timers.led_flash_ms = general["timers"].as<JsonObject>()["led_flash_ms"].as<unsigned long>();
+  timers.switch_debounce_ms = general["timers"].as<JsonObject>()["switch_debounce_ms"].as<unsigned long>();
+  timers.heartbeat_us = general["timers"].as<JsonObject>()["heartbeat_us"].as<uint64_t>();
+  timers.poll_us = general["timers"].as<JsonObject>()["poll_us"].as<uint64_t>();
+  
   JsonObject buttons = doc.as<JsonObject>()["buttons"].as<JsonObject>();
   for( JsonPair kv : buttons ) {
     JsonObject button = kv.value().as<JsonObject>();

@@ -36,12 +36,12 @@ void setup() {
 
   heartbeatTimer = timerBegin(HEARTBEAT_TIMER, 80, true);
   timerAttachInterrupt(heartbeatTimer, &hearbeatTimerISR, true);
-  timerAlarmWrite(heartbeatTimer, HEARTBEAT_TIME, true);
+  timerAlarmWrite(heartbeatTimer, Config::getConfig().timers.heartbeat_us, true);
   timerAlarmEnable(heartbeatTimer);
 
   pollTimer = timerBegin(POLL_TIMER, 80, true);
   timerAttachInterrupt(pollTimer, &pollTimerISR, true);
-  timerAlarmWrite(pollTimer, POLL_TIME, true);
+  timerAlarmWrite(pollTimer, Config::getConfig().timers.poll_us, true);
   timerAlarmEnable(pollTimer);
 }
 
