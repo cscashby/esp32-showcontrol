@@ -13,8 +13,20 @@ Config::Config() {
   }
 
   //serializeJson(doc, Serial);
-  JsonObject network = doc.as<JsonObject>()["network"].as<JsonObject>();
-  netConfig.hostname = network["hostname"].as<char*>();
+  JsonObject net = doc.as<JsonObject>()["network"].as<JsonObject>();
+  network.hostname = net["hostname"].as<char*>();
+  JsonObject osc_hosts = net["osc_hosts"].as<JsonObject>();
+  for( JsonPair kv : osc_hosts ) {
+    JsonObject jo = kv.value().as<JsonObject>();
+    OSCHost h = {
+      .name = kv.key().c_str(),
+      .host = jo["host"].as<String>(),
+      .port = jo["port"].as<uint16_t>()
+    };
+    Serial.print("Adding host: "); Serial.println(h.name);
+    network.osc_hosts.push_back(h);
+  }
+  network.osc_listen_port = net["osc_listen_port"].as<uint16_t>();
   
   JsonObject general = doc.as<JsonObject>()["general"].as<JsonObject>();
   timers.led_flash_ms = general["timers"].as<JsonObject>()["led_flash_ms"].as<unsigned long>();
@@ -28,9 +40,9 @@ Config::Config() {
     std::vector<String> cmds;
     
     Button b = Button(kv.key().c_str(), button["Button_pin"].as<uint8_t>(), button["LED_pin"].as<uint8_t>());
-    if( button.containsKey("OSC_commands") ) {
-      for( JsonVariant c : button["OSC_commands"].as<JsonArray>() ) {
-        b.OSC_commands.push_back(c.as<char*>());
+    if( button.containsKey("OSC_messages") ) {
+      for( JsonVariant c : button["OSC_messages"].as<JsonArray>() ) {
+        b.OSC_messages.push_back(c.as<char*>());
       }
     }
     Config::OSC_subscription sub = {

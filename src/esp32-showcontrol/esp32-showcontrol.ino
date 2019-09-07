@@ -5,6 +5,8 @@
 #include "Button.h"
 #include "const.h"
 
+#include <esp_log.h>
+
 Display d = Display();
 
 hw_timer_t *heartbeatTimer = NULL;
@@ -25,11 +27,12 @@ void IRAM_ATTR pollTimerISR() {
 }
 
 void setup() {
-  delay(1000);
   Serial.begin(115200);
+  //esp_log_level_set("*", ESP_LOG_DEBUG);
 
   d.begin();
   Network::begin(d);
+  OSC::begin();
   for (unsigned i=0; i < Config::getConfig().buttons.size(); i++) {
     Config::getConfig().buttons.at(i).begin();
   }
@@ -47,4 +50,5 @@ void setup() {
 
 void loop() {
   Network::loop();
+  OSC::loop();
 }

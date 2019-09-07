@@ -15,8 +15,16 @@ class Config {
       String string;
     };
 
+    struct OSCHost {
+      const String name;
+      const String host;
+      uint16_t port;
+    };
+
     struct network_config {
       String hostname;
+      std::vector<OSCHost> osc_hosts;
+      uint16_t osc_listen_port;
     };
 
     struct timer_config {
@@ -28,7 +36,7 @@ class Config {
     
     std::vector<Button> buttons;
     timer_config timers;
-    network_config netConfig;
+    network_config network;
 
     static Config& getConfig() {
       static Config instance;
@@ -40,4 +48,4 @@ class Config {
     void operator=(Config const&);  // Not implemented
 };
 
-#endif
+#endif //Config_h

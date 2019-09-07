@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <map>
 
+#include "OSC.h"
 #include "const.h"
 
 class Button;
@@ -23,7 +24,7 @@ class Button {
     const uint8_t pin;
     const uint8_t LED_pin;
     
-    std::vector<String> OSC_commands;
+    std::vector<String> OSC_messages;
 
   private:
     bool pressed;

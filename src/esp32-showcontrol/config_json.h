@@ -1,7 +1,14 @@
 const char CONFIG_JSON[] PROGMEM = R"=====(
 {
   "network": {
-    "hostname": "esp32-showcontrol"
+    "hostname": "esp32-showcontrol",
+    "osc_hosts": {
+      "main": {
+        "host": "192.168.5.104",
+        "port": 53000
+      }
+    },
+    "osc_listen_port": 53001
   },
   "general": {
     "timers" : {
@@ -15,7 +22,7 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
     "go": {
       "LED_pin": 0,
       "Button_pin": 33,
-      "OSC_commands": [
+      "OSC_messages": [
         "/stop",
         "/go"
       ],
@@ -26,7 +33,7 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
     "stop": {
       "LED_pin": 15,
       "Button_pin": 35,
-      "OSC_commands": [
+      "OSC_messages": [
         "/stop"
       ],
       "OSC_subscribe": {
@@ -36,7 +43,7 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
     "pause": {
       "LED_pin": 13,
       "Button_pin": 34,
-      "OSC_commands": [
+      "OSC_messages": [
         "/pause",
         "/playhead/previous"
       ],
@@ -47,7 +54,7 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
     "previous": {
       "LED_pin": 16,
       "Button_pin": 36,
-      "OSC_commands": [
+      "OSC_messages": [
         "/stop",
         "/playhead/previous"
       ]
@@ -55,7 +62,7 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
     "next": {
       "LED_pin": 32,
       "Button_pin": 39,
-      "OSC_commands": [
+      "OSC_messages": [
         "/playhead/next"
       ]
     }

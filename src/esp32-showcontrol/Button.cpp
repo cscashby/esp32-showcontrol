@@ -1,5 +1,5 @@
 #include "Button.h"
-#include "config.h"
+#include "Config.h"
 
 static std::map<uint8_t, Button*> buttonMap;
 
@@ -31,6 +31,9 @@ void IRAM_ATTR Button::isr() {
     unsigned int i = 0;
     Serial.print("Button pressed: ");
     Serial.println(buttonName);
+    for( const String msg : OSC_messages ) {
+      OSC::queueOSCMessage(msg);
+    }
   }
 }
 
