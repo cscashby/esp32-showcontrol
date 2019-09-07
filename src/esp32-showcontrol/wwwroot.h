@@ -11,7 +11,7 @@ const char WEBPAGE_ROOT[] PROGMEM = R"=====(
 
   <h2>Other functions</h2>
   <ul>
-    <li><a href="/_ac">Edit network settings</a></li>
+    <li><a href="#">Edit network settings (NOT YET IMPLEMENTED)</a></li>
   </ul>
 </body>
 

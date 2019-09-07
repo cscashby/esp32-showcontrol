@@ -2,7 +2,6 @@
 #include "config.h"
 
 WebServer Network_webServer;
-AutoConnect Network_portal(Network_webServer);
 
 bool Network::eth_connected;
 bool Network::wifi_connected;
@@ -77,27 +76,15 @@ void Network::begin(Display* d) {
 
   ETH.begin();
   
-  d->tft->clearScreen();
-  d->tft->println();
-  d->tft->setTextColor(WHITE);
-  d->tft->println("   -- WiFi --");
-  
   Network_webServer.on("/", Network::rootPage);
-  Network_portal.onNotFound(Network::handle404);
-
-  AutoConnectConfig config;
-  config.hostName = Config::getConfig().network.hostname;
-  Network_portal.config(config);
-
-  if (Network_portal.begin()) {
-    Serial.println("HTTP server:" + WiFi.localIP().toString());
-  }
-
+  Network_webServer.onNotFound(Network::handle404);
+  Network_webServer.begin();
+  
   d->tft->clearScreen();
 }
 
 void Network::loop() {
-  Network_portal.handleClient();
+  Network_webServer.handleClient();
 }
 
 void Network::rootPage() {

@@ -4,7 +4,6 @@
 #include <ETH.h>
 #include <WiFi.h>
 #include <WebServer.h>
-#include <AutoConnect.h>
 #include "wwwroot.h"
 #include "Display.h"
 

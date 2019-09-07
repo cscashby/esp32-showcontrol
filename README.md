@@ -3,7 +3,7 @@ Showcontrol with an ESP32.
 
 <img src="https://github.com/cscashby/esp32-showcontrol/raw/master/case-front.jpg" alt="Control box front"/>
 
-The box is PoE powered (if you use a suitable board, I highly recommend the [ESP32-PoE-ISO](https://www.olimex.com/Products/IoT/ESP32/ESP32-POE-ISO/open-source-hardware) which has adequate isolation for the network port, or can be powered using a Micro USB connector and will support WiFi (though this is not recommended for production use for obvious reasons).
+The box is PoE powered (if you use a suitable board, I highly recommend the [ESP32-PoE-ISO](https://www.olimex.com/Products/IoT/ESP32/ESP32-POE-ISO/open-source-hardware) which has adequate isolation for the network port, or can be powered using a Micro USB connector and will support WiFi (though this is not recommended for production use for obvious reasons, and hasn't yet been implemented).
 
 The current design allows for Go, Stop, Pause, Next and Previous buttons, and a Jack terminated footswitch (likely mapped to Go, obviously).
 
