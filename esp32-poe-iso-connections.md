@@ -16,7 +16,7 @@ Reference: [ESP32-PoE-ISO-Rev B Datasheet](https://github.com/OLIMEX/ESP32-POE-I
 | 10       | GPIO5    | LCD_CS       | 1-Purple             |
 
 
-| EXT@ pin | Function | Connected to | Top Case Wire Colour |
+| EXT2 pin | Function | Connected to | Top Case Wire Colour |
 | :------: | :------- | :----------- | :------------------- |
 | 1        | GPI39    | BTN_NEXT     | 2-Purple             |
 | 2        | GPI36    | BTN_PREV     | 2-Green              |
