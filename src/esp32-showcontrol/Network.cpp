@@ -77,6 +77,9 @@ void Network::begin(Display* d) {
   ETH.begin();
   
   Network_webServer.on("/", Network::rootPage);
+  Network_webServer.on("/main.js", Network::mainJS);
+  Network_webServer.on("/set/master_ip", Network::handle_setMasterIP);
+  Network_webServer.on("/get", Network::handle_get);
   Network_webServer.onNotFound(Network::handle404);
   Network_webServer.begin();
   
@@ -89,6 +92,23 @@ void Network::loop() {
 
 void Network::rootPage() {
   Network_webServer.send(200, "text/html", WEBPAGE_ROOT);
+}
+
+void Network::mainJS() {
+  Network_webServer.send(200, "text/javascript", MAINJS_ROOT);
+}
+
+void Network::handle_setMasterIP() {
+  if (Network_webServer.method() != HTTP_POST) {
+    Network_webServer.send(405, "text/plain", "Method Not Allowed");
+  } else {
+    Serial.println("New master IP: " + Network_webServer.arg("master_ip"));
+    Network_webServer.send(205, "text/plain", "POST body was:\n" + Network_webServer.arg("master_ip"));
+  }
+}
+
+void Network::handle_get() {
+  Network_webServer.send(200, "application/json", CONFIG_JSON);
 }
 
 void Network::handle404() {

@@ -5,6 +5,7 @@
 #include <WiFi.h>
 #include <WebServer.h>
 #include "wwwroot.h"
+#include "wwwmainjs.h"
 #include "Display.h"
 
 class Network {
@@ -15,7 +16,10 @@ class Network {
     static void loop();
     
     static void rootPage();
+    static void mainJS();
     static void handle404();
+    static void handle_setMasterIP();
+    static void handle_get();
     
   private:
     static bool eth_connected;
