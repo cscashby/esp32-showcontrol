@@ -125,6 +125,31 @@ void OSC::begin(Display* d) {
     }
     OSC::updateDisplay();
   });
+  osc.subscribe("/reply/workspace/*/runningOrPausedCues", [](OscMessage& m) {
+    // We copy the address as we don't want to break the string when we tokenise it
+    String addr = m.address();
+    char sizeString[] = "/workspace/FBD9B081-1C68-4C9C-8B74-98712F4DD90B/runningOrPausedCues";
+    
+    String json = m.arg<String>(0);
+    // Deserialize the JSON document
+    StaticJsonDocument<5000> doc;
+    DeserializationError error = deserializeJson(doc, json);
+    const char* displayName;
+    const char* cueID;
+    // Test if parsing succeeds.
+    if (error) {
+      Serial.print(F("deserializeJson() failed: "));
+      Serial.println(error.c_str());
+      displayName = "error";
+      cueID = "";
+    } else {
+      displayName = doc["data"][0]["name"];
+      cueID = doc["data"][0]["uniqueID"];
+    }
+    OSC::runningCue.cueID = cueID;
+    OSC::runningCue.displayName = (displayName == NULL || strlen(displayName) == 0) ? "---" : displayName;
+    OSC::updateDisplay();
+  });
   // Button-specific replies
 //  for( Config::OSCSubscription sub : Config::getConfig().OSCsubscriptions ) {
 //    if( sub.type.equals("getCurrentAndNext") ) {
@@ -173,8 +198,10 @@ void OSC::loop() {
   }
   for( Config::OSCHost h : Config::getConfig().network.osc_hosts ) {
     if( OSC::sendHeartBeat ) {
-      OscMessage o(h.host, h.port, "/thump");
-      osc.send(o);
+      OscMessage o1(h.host, h.port, "/thump");
+      osc.send(o1);
+      OscMessage o2(h.host, h.port, "/runningOrPausedCues");
+      osc.send(o2);
     }
   }
   if( OSC::sendHeartBeat )
@@ -186,9 +213,13 @@ void OSC::loop() {
 void OSC::updateDisplay() {
   d->clearTextArea();
   d->tft->setTextColor(BLUE);
-  d->tft->setTextScale(1,2);
+  d->tft->setTextScale(1,1);
   d->tft->setFont(&mono_mid);
-  d->tft->println(nextCue.displayName);
+  d->tft->println("Next:");
+  // One line, smaller
+  d->tft->println(" " + Display::truncateString(nextCue.displayName, 13));
+  d->tft->setTextScale(1,2);
   d->tft->setTextColor(GREEN);
-  d->tft->println(runningCue.displayName);
+  // Allow over 2 lines
+  d->tft->println(Display::truncateString(runningCue.displayName, 29));
 }

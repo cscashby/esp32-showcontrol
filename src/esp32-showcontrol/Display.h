@@ -14,6 +14,7 @@ class Display {
     void heartbeat();
     void brokenHeart();
     void clearTextArea();
+    static String truncateString(String in, long maxChars);
     SSD_13XX* tft;
     
   private:

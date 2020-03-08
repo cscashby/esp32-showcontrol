@@ -37,6 +37,17 @@ void Display::brokenHeart() {
 }
 
 void Display::clearTextArea() {
-  tft->fillRect(TEXTAREA_X, TEXTAREA_Y, TEXTAREA_WIDTH, TEXTAREA_HEIGHT, LCD_BG_COLOR);
+  // Left of heart
+  tft->fillRect(TEXTAREA_X, TEXTAREA_Y, TEXTAREA_WIDTH - LCD_BROKENHEART_WIDTH, TEXTAREA_HEIGHT, LCD_BG_COLOR);
+  // Below heart
+  tft->fillRect(LCD_BROKENHEART_X, TEXTAREA_Y + LCD_BROKENHEART_HEIGHT, LCD_BROKENHEART_WIDTH, TEXTAREA_HEIGHT - LCD_BROKENHEART_HEIGHT, LCD_BG_COLOR);
   tft->setCursor(TEXTAREA_X, TEXTAREA_Y);
+}
+
+String Display::truncateString(String in, long maxChars) {
+  if( in.length() > maxChars) {
+    return in.substring(0, maxChars) + "...";
+  } else {
+    return in;
+  }
 }

@@ -15,7 +15,7 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
       "led_flash_ms": 1000,
       "switch_debounce_ms": 200,
       "heartbeat_timeout_ms": 1500,
-      "heartbeat_us": 500000,
+      "heartbeat_us": 200000,
       "poll_us": 100000
     },
     "regular_osc" : [
@@ -35,7 +35,8 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
       "Button_pin": 33,
       "OSC_messages": [
         "/stop",
-        "/go"
+        "/go",
+        "/runningOrPausedCues"
       ]
     },
     "stop": {

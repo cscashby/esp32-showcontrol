@@ -14,9 +14,11 @@
 #define TEXTAREA_X 0
 #define TEXTAREA_Y 0
 #define TEXTAREA_WIDTH 96
-#define TEXTAREA_HEIGHT 48
+#define TEXTAREA_HEIGHT 64
 
 #define LCD_BG_COLOR BLACK
+
+#define LINE_LENGTH 14
 
 const unsigned char LCD_HEART [] PROGMEM = {
   // 'h, 16x16px
@@ -27,7 +29,7 @@ const unsigned char LCD_HEART [] PROGMEM = {
 #define LCD_HEART_HEIGHT 16
 #define LCD_HEART_X LCD_WIDTH-LCD_HEART_WIDTH
 #define LCD_HEART_Y 0
-#define LCD_HEART_COLOR BLUE
+#define LCD_HEART_COLOR GREEN
 const unsigned char LCD_BROKENHEART [] PROGMEM = {
   // 'bh, 16x16px
   0x00, 0x00, 0x1c, 0x78, 0x76, 0xde, 0x42, 0xca, 0x83, 0x47, 0x87, 0x63, 0x84, 0xe1, 0xc6, 0x83, 
