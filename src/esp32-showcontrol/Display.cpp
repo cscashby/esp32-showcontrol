@@ -35,3 +35,8 @@ void Display::brokenHeart() {
   tft->drawBitmap(LCD_BROKENHEART_X, LCD_BROKENHEART_Y, LCD_BROKENHEART, LCD_BROKENHEART_WIDTH, LCD_BROKENHEART_HEIGHT, col);
   heartbeatStatus = !heartbeatStatus;
 }
+
+void Display::clearTextArea() {
+  tft->fillRect(TEXTAREA_X, TEXTAREA_Y, TEXTAREA_WIDTH, TEXTAREA_HEIGHT, LCD_BG_COLOR);
+  tft->setCursor(TEXTAREA_X, TEXTAREA_Y);
+}

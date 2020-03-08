@@ -13,6 +13,7 @@ class Display {
     void loop();
     void heartbeat();
     void brokenHeart();
+    void clearTextArea();
     SSD_13XX* tft;
     
   private:

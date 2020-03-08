@@ -25,7 +25,7 @@ void IRAM_ATTR pollTimerISR() {
 
 void setup() {
   Serial.begin(115200);
-  //esp_log_level_set("*", ESP_LOG_DEBUG);
+  esp_log_level_set("*", ESP_LOG_DEBUG);
 
   d.begin();
   Network::begin(&d);

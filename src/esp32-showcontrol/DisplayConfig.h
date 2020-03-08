@@ -11,6 +11,11 @@
 #define LCD_WIDTH 96
 #define LCD_HEIGHT 64
 
+#define TEXTAREA_X 0
+#define TEXTAREA_Y 0
+#define TEXTAREA_WIDTH 96
+#define TEXTAREA_HEIGHT 48
+
 #define LCD_BG_COLOR BLACK
 
 const unsigned char LCD_HEART [] PROGMEM = {

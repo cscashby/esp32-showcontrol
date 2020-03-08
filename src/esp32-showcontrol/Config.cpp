@@ -1,7 +1,7 @@
 #include "Config.h"
 
 Config::Config() {
-  StaticJsonDocument<1500> doc;
+  StaticJsonDocument<2500> doc;
   DeserializationError error = deserializeJson(doc, CONFIG_JSON);
 
   // Test if parsing succeeds.
@@ -34,6 +34,17 @@ Config::Config() {
   timers.heartbeat_timeout_ms = general["timers"].as<JsonObject>()["heartbeat_timeout_ms"].as<unsigned long>();
   timers.heartbeat_us = general["timers"].as<JsonObject>()["heartbeat_us"].as<uint64_t>();
   timers.poll_us = general["timers"].as<JsonObject>()["poll_us"].as<uint64_t>();
+  JsonArray regularOSC = general["regular_osc"].as<JsonArray>();
+  for( JsonObject osco : regularOSC ) {
+    SCOSCMessage oscm = {
+      .command = osco["string"].as<char*>(),
+      .has_arg_int = osco.containsKey("arg_int")
+    };
+    if( oscm.has_arg_int )
+        oscm.arg_int = osco["arg_int"].as<uint8_t>();
+
+    regularOSCMessages.push_back(oscm);
+  }
   
   JsonObject buttons = doc.as<JsonObject>()["buttons"].as<JsonObject>();
   for( JsonPair kv : buttons ) {
@@ -43,13 +54,17 @@ Config::Config() {
     Button b = Button(kv.key().c_str(), button["Button_pin"].as<uint8_t>(), button["LED_pin"].as<uint8_t>());
     if( button.containsKey("OSC_messages") ) {
       for( JsonVariant c : button["OSC_messages"].as<JsonArray>() ) {
-        b.OSC_messages.push_back(c.as<char*>());
+        SCOSCMessage msg;
+        msg.command = c.as<char*>();
+        b.OSC_messages.push_back(msg);
       }
     }
-    Config::OSC_subscription sub = {
+    Config::OSCSubscription sub = {
       .button = &b,
-      .string = button["OSC_subscribe"]["string"].as<char*>()
+      .string = button["OSC_subscribe"]["string"].as<char*>(),
+      .type = button["OSC_subscribe"]["type"].as<char*>()
     };
+    this->OSCsubscriptions.push_back(sub);
     this->buttons.push_back(b);
   }
 }

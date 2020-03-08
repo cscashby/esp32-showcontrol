@@ -31,13 +31,13 @@ void IRAM_ATTR Button::isr() {
     unsigned int i = 0;
     Serial.print("Button pressed: ");
     Serial.println(buttonName);
-    for( const String msg : OSC_messages ) {
+    for( SCOSCMessage msg : OSC_messages ) {
       OSC::queueOSCMessage(msg);
     }
   }
 }
 
-void Button::poll() {
+void IRAM_ATTR Button::poll() {
   unsigned long now = millis();
   if( (now - ledLastChangeMillis) > Config::getConfig().timers.led_flash_ms ) {
     digitalWrite(LED_pin, false);

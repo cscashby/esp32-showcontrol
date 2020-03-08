@@ -5,14 +5,17 @@
 #include <ArduinoJson.h>
 #include "config_json.h"
 #include "Button.h"
+#include "structs.h"
 
 // Reference: Singleton design pattern here: https://stackoverflow.com/questions/1008019/c-singleton-design-pattern
 
 class Config {
   public:
-    struct OSC_subscription {
+    // TODO: Move to structs.h
+    struct OSCSubscription {
       Button* button;
       String string;
+      String type;
     };
 
     struct OSCHost {
@@ -36,6 +39,8 @@ class Config {
     };
     
     std::vector<Button> buttons;
+    std::vector<OSCSubscription> OSCsubscriptions;
+    std::vector<SCOSCMessage> regularOSCMessages;
     timer_config timers;
     network_config network;
 

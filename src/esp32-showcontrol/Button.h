@@ -24,7 +24,7 @@ class Button {
     const uint8_t pin;
     const uint8_t LED_pin;
     
-    std::vector<String> OSC_messages;
+    std::vector<SCOSCMessage> OSC_messages;
 
   private:
     bool pressed;

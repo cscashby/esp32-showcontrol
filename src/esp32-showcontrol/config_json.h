@@ -3,7 +3,7 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
   "network": {
     "hostname": "esp32-showcontrol",
     "osc_hosts": {
-      "main": {
+      "test-imac": {
         "host": "192.168.5.104",
         "port": 53000
       }
@@ -17,7 +17,17 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
       "heartbeat_timeout_ms": 1500,
       "heartbeat_us": 500000,
       "poll_us": 100000
-    }
+    },
+    "regular_osc" : [
+      {
+        "string": "/updates",
+        "arg_int": 1
+      },
+      {
+        "string": "/alwaysReply",
+        "arg_int": 1
+      }
+    ]
   },
   "buttons": {
     "go": {
@@ -26,20 +36,14 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
       "OSC_messages": [
         "/stop",
         "/go"
-      ],
-      "OSC_subscribe": {
-        "string": "/reply/go"
-      }
+      ]
     },
     "stop": {
       "LED_pin": 15,
       "Button_pin": 35,
       "OSC_messages": [
         "/stop"
-      ],
-      "OSC_subscribe": {
-        "string": "/reply/stop"
-      }
+      ]
     },
     "pause": {
       "LED_pin": 13,
@@ -47,10 +51,7 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
       "OSC_messages": [
         "/pause",
         "/playhead/previous"
-      ],
-      "OSC_subscribe": {
-        "string": "/reply/pause"
-      }
+      ]
     },
     "previous": {
       "LED_pin": 16,
