@@ -16,12 +16,10 @@ Config::Config() {
   JsonObject net = doc.as<JsonObject>()["network"].as<JsonObject>();
   network.hostname = net["hostname"].as<char*>();
   JsonObject jo_master = net["master_host"].as<JsonObject>();
-    OSCHost h = {
-      .name = jo_master["name"].as<String>(),
-      .host = jo_master["host"].as<String>(),
-      .port = jo_master["port"].as<uint16_t>()
-    };
-    Serial.print("Adding master host: "); Serial.println(h.name); 
+  network.master_host.name = jo_master["name"].as<String>();
+  network.master_host.host = jo_master["host"].as<String>();
+  network.master_host.port = jo_master["port"].as<uint16_t>();
+  Serial.print("Adding master host: "); Serial.println(network.master_host.name); 
   JsonObject secondary_hosts = net["secondary_hosts"].as<JsonObject>();
   for( JsonPair kv : secondary_hosts ) {
     JsonObject jo = kv.value().as<JsonObject>();

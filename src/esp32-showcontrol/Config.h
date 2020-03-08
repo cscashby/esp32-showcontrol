@@ -19,8 +19,8 @@ class Config {
     };
 
     struct OSCHost {
-      const String name;
-      const String host;
+      String name;
+      String host;
       uint16_t port;
     };
 
