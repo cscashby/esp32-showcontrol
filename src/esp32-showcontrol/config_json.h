@@ -6,7 +6,7 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
       "name": "test-imac",
       "host": "192.168.5.104",
       "port": 53000
-    }
+    },
     "secondary_hosts": [
       {
         "name": "secondary-dummy",
