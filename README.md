@@ -13,6 +13,8 @@ The control box has a small display (0.94-0.96" with 3-4 lines of text) and will
 
 The box wiring is currently soldered wires directly onto pushbuttons and LEDs, and soldered onto the OLED board.  [Pinouts are documented in a separate file](https://github.com/cscashby/esp32-showcontrol/blob/master/esp32-poe-iso-connections.md).
 
-NOTE the current codebase for all the features sort of working is in the single esp32-showcontrol.ino file.  This is being modularised and written in a much better way in the src/ folder, so check that out for the hopefully more decent code.
+~~NOTE the current codebase for all the features sort of working is in the single esp32-showcontrol.ino file.  This is being modularised and written in a much better way in the src/ folder, so check that out for the hopefully more decent code.
+
+NOTE the file 'esp32-showcontrol.ino' is the first non-modular version of the codebase, which is deprecated, but left to remind me how I got it to work the first time around. The src/ folder is now current and MVP feature complete.
 
 The good, the bad and the ugly of the creation process are [documented in this photo album](https://photos.app.goo.gl/oM8NKtMR5yHytawS9).
