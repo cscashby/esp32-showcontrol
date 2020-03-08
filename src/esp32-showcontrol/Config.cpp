@@ -15,16 +15,23 @@ Config::Config() {
   //serializeJson(doc, Serial);
   JsonObject net = doc.as<JsonObject>()["network"].as<JsonObject>();
   network.hostname = net["hostname"].as<char*>();
-  JsonObject osc_hosts = net["osc_hosts"].as<JsonObject>();
-  for( JsonPair kv : osc_hosts ) {
+  JsonObject jo_master = net["master_host"].as<JsonObject>();
+    OSCHost h = {
+      .name = jo_master["name"].as<String>(),
+      .host = jo_master["host"].as<String>(),
+      .port = jo_master["port"].as<uint16_t>()
+    };
+    Serial.print("Adding master host: "); Serial.println(h.name); 
+  JsonObject secondary_hosts = net["secondary_hosts"].as<JsonObject>();
+  for( JsonPair kv : secondary_hosts ) {
     JsonObject jo = kv.value().as<JsonObject>();
     OSCHost h = {
-      .name = kv.key().c_str(),
+      .name = jo["name"].as<String>(),
       .host = jo["host"].as<String>(),
       .port = jo["port"].as<uint16_t>()
     };
-    Serial.print("Adding host: "); Serial.println(h.name);
-    network.osc_hosts.push_back(h);
+    Serial.print("Adding secondary host: "); Serial.println(h.name);
+    network.secondary_hosts.push_back(h);
   }
   network.osc_listen_port = net["osc_listen_port"].as<uint16_t>();
   
@@ -34,8 +41,8 @@ Config::Config() {
   timers.heartbeat_timeout_ms = general["timers"].as<JsonObject>()["heartbeat_timeout_ms"].as<unsigned long>();
   timers.heartbeat_us = general["timers"].as<JsonObject>()["heartbeat_us"].as<uint64_t>();
   timers.poll_us = general["timers"].as<JsonObject>()["poll_us"].as<uint64_t>();
-  JsonArray regularOSC = general["regular_osc"].as<JsonArray>();
-  for( JsonObject osco : regularOSC ) {
+  JsonArray startOSC = general["start_osc"].as<JsonArray>();
+  for( JsonObject osco : startOSC ) {
     SCOSCMessage oscm = {
       .command = osco["string"].as<char*>(),
       .has_arg_int = osco.containsKey("arg_int")
@@ -43,7 +50,7 @@ Config::Config() {
     if( oscm.has_arg_int )
         oscm.arg_int = osco["arg_int"].as<uint8_t>();
 
-    regularOSCMessages.push_back(oscm);
+    startOSCMessages.push_back(oscm);
   }
   
   JsonObject buttons = doc.as<JsonObject>()["buttons"].as<JsonObject>();

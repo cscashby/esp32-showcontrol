@@ -150,19 +150,10 @@ void OSC::begin(Display* d) {
     OSC::runningCue.displayName = (displayName == NULL || strlen(displayName) == 0) ? "---" : displayName;
     OSC::updateDisplay();
   });
-  // Button-specific replies
-//  for( Config::OSCSubscription sub : Config::getConfig().OSCsubscriptions ) {
-//    if( sub.type.equals("getCurrentAndNext") ) {
-//      osc.subscribe(sub.string, [](OscMessage& m) {
-//        SCOSCMessage msg;
-//        msg.command = "/runningOrPausedCues";
-//        OSC::queueOSCMessage(msg);
-//      });
-//    }
-//  }
-
-  // Send regular (non-thump) messages to QLab, waiting for a heartbeat to do so
-  for( SCOSCMessage oscm : Config::getConfig().regularOSCMessages ) {
+  // Set the cueID to selected so that we can get the selected cue's name as part of startup
+  OSC::nextCue.cueID = "selected";
+  // Send startup (non-thump) messages to QLab, waiting for a heartbeat to do so
+  for( SCOSCMessage oscm : Config::getConfig().startOSCMessages ) {
       oscm.wait_for_heartbeat = true;
       currentQueue.push_back(oscm);
   }
@@ -182,27 +173,26 @@ void OSC::loop() {
   // Process my queue of outbound messages, but only if we have a good heartbeat, and send one if we need to
   for( SCOSCMessage msg : currentQueue ) {
     // I do remove some entries, but Iterators are meant to work for deque even if items are removed (and pop is last in for loop so shouldn't break things)
-    for( Config::OSCHost h : Config::getConfig().network.osc_hosts ) {
-      // TODO: Lots to do to enable more than one host!
+    // TODO: Support secondary hosts for some messages (//for( Config::OSCHost h : Config::getConfig().network.secondary_hosts ) { )
+      Config::OSCHost h = Config::getConfig().network.master_host;
       if( OSC::heartBeatOK ) {
-        Serial.print("Sending: "); Serial.print(msg.command); Serial.print(" to "); Serial.print(h.host); Serial.print(":"); Serial.println(h.port);
+        Serial.print("Sending: "); Serial.print(msg.command); Serial.print(" to "); Serial.print(h.name); Serial.print(":"); Serial.println(h.port);
         OscMessage o(h.host, h.port, msg.command);
         if( msg.has_arg_int )
           o.push(msg.arg_int);
         
         osc.send(o);
       }
-    }
     if( !msg.wait_for_heartbeat || OSC::heartBeatOK )
       currentQueue.pop_front();
   }
-  for( Config::OSCHost h : Config::getConfig().network.osc_hosts ) {
-    if( OSC::sendHeartBeat ) {
-      OscMessage o1(h.host, h.port, "/thump");
-      osc.send(o1);
-      OscMessage o2(h.host, h.port, "/runningOrPausedCues");
-      osc.send(o2);
-    }
+  // TODO: Support secondary hosts for some messages
+  Config::OSCHost h = Config::getConfig().network.master_host;
+  if( OSC::sendHeartBeat ) {
+    OscMessage o1(h.host, h.port, "/thump");
+    osc.send(o1);
+    OscMessage o2(h.host, h.port, "/runningOrPausedCues");
+    osc.send(o2);
   }
   if( OSC::sendHeartBeat )
     OSC::sendHeartBeat = false;

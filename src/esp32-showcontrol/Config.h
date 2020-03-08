@@ -26,7 +26,8 @@ class Config {
 
     struct network_config {
       String hostname;
-      std::vector<OSCHost> osc_hosts;
+      OSCHost master_host;
+      std::vector<OSCHost> secondary_hosts;
       uint16_t osc_listen_port;
     };
 
@@ -40,7 +41,7 @@ class Config {
     
     std::vector<Button> buttons;
     std::vector<OSCSubscription> OSCsubscriptions;
-    std::vector<SCOSCMessage> regularOSCMessages;
+    std::vector<SCOSCMessage> startOSCMessages;
     timer_config timers;
     network_config network;
 

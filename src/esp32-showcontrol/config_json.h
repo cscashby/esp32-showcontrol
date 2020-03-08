@@ -2,12 +2,18 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
 {
   "network": {
     "hostname": "esp32-showcontrol",
-    "osc_hosts": {
-      "test-imac": {
+    "master_host": {
+      "name": "test-imac",
+      "host": "192.168.5.104",
+      "port": 53000
+    }
+    "secondary_hosts": [
+      {
+        "name": "secondary-dummy",
         "host": "192.168.5.104",
         "port": 53000
       }
-    },
+    ],
     "osc_listen_port": 53001
   },
   "general": {
@@ -18,7 +24,7 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
       "heartbeat_us": 200000,
       "poll_us": 100000
     },
-    "regular_osc" : [
+    "start_osc" : [
       {
         "string": "/updates",
         "arg_int": 1
@@ -26,6 +32,12 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
       {
         "string": "/alwaysReply",
         "arg_int": 1
+      },
+      {
+        "string": "/runningOrPausedCues"
+      },
+      {
+        "string": "/cue/selected/displayName"
       }
     ]
   },
