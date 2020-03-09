@@ -6,14 +6,18 @@ WebServer Network_webServer;
 bool Network::eth_connected;
 bool Network::wifi_connected;
 
+Display* Network::d = NULL;
+
 void Network::WiFiEvent(WiFiEvent_t event)
 {
   switch (event) {
     case SYSTEM_EVENT_ETH_START:
       Serial.println("ETH Started");
+      Network::displayDetails();
       break;
     case SYSTEM_EVENT_ETH_CONNECTED:
       Serial.println("ETH Connected");
+      Network::displayDetails();
       break;
     case SYSTEM_EVENT_ETH_GOT_IP:
       Serial.print("ETH MAC: ");
@@ -27,21 +31,27 @@ void Network::WiFiEvent(WiFiEvent_t event)
       Serial.print(ETH.linkSpeed());
       Serial.println("Mbps");
       eth_connected = true;
+      Network::displayDetails();
       break;
     case SYSTEM_EVENT_ETH_DISCONNECTED:
       Serial.println("ETH Disconnected");
       eth_connected = false;
+      Network::displayDetails();
       break;
     case SYSTEM_EVENT_ETH_STOP:
       Serial.println("ETH Stopped");
       eth_connected = false;
+      Network::displayDetails();
       break;
     case SYSTEM_EVENT_STA_CONNECTED:
       Serial.println("WiFi AP connected");
+      wifi_connected = true;
+      Network::displayDetails();
       break;
     case SYSTEM_EVENT_STA_DISCONNECTED:
       Serial.println("WiFi AP disconnected");
       wifi_connected = false;
+      Network::displayDetails();
       break;
     case SYSTEM_EVENT_STA_GOT_IP:
       Serial.print("WiFi MAC: ");
@@ -49,10 +59,12 @@ void Network::WiFiEvent(WiFiEvent_t event)
       Serial.print(", IPv4: ");
       Serial.print(WiFi.localIP());
       wifi_connected = true;
+      Network::displayDetails();
       break;
     case SYSTEM_EVENT_STA_LOST_IP:
       Serial.println("WiFi AP lost IP");
       wifi_connected = false;
+      Network::displayDetails();
       break;
     default:
       Serial.print("WifiEvent: ");
@@ -62,17 +74,11 @@ void Network::WiFiEvent(WiFiEvent_t event)
 }
 
 void Network::begin(Display* d) {
+  Network::d = d;
+  
   eth_connected = false;
   wifi_connected = false;
   WiFi.onEvent(Network::WiFiEvent);
-  
-  d->tft->clearScreen();
-  d->tft->setCursor(0, 0);
-  d->tft->setTextScale(1,2);
-  d->tft->setFont(&mono_mid);
-  d->tft->println();
-  d->tft->setTextColor(WHITE);
-  d->tft->println("-- Ethernet --");
 
   ETH.begin();
   
@@ -82,8 +88,6 @@ void Network::begin(Display* d) {
   Network_webServer.on("/get", Network::handle_get);
   Network_webServer.onNotFound(Network::handle404);
   Network_webServer.begin();
-  
-  d->tft->clearScreen();
 }
 
 void Network::loop() {
@@ -128,4 +132,31 @@ void Network::handle404() {
         message += " " + Network_webServer.argName ( i ) + ": " + Network_webServer.arg ( i ) + "\n";
     }
     Network_webServer.send ( 404, "text/plain", message );
+}
+
+void Network::displayDetails() {
+  // We only run this display update if the main loop is not running.
+  if( !Config::mainLoopStarted ) {
+    d->clearTextArea();
+    d->tft->setTextColor(WHITE);
+    d->tft->setTextScale(1,2);
+    d->tft->setFont(&mono_mid);
+    d->tft->println("Press to start");
+    d->tft->setTextScale(1,1);
+    d->tft->setTextColor(BLUE);
+    d->tft->println(ETH.macAddress());
+    if( eth_connected ) {
+      d->tft->setTextColor(GREEN);
+      d->tft->print("IP: ");
+      d->tft->setTextScale(1,2);
+      d->tft->println(ETH.localIP());
+      d->tft->setTextScale(1,1);
+      d->tft->print(ETH.linkSpeed());
+      d->tft->println(" Mbps" + ETH.fullDuplex() ? " FDX" : "");
+    } else {
+      d->tft->setTextColor(RED);
+      d->tft->setTextScale(2,2);
+      d->tft->println("No IP");
+    }
+  }
 }

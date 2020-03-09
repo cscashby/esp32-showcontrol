@@ -24,6 +24,10 @@ class Network {
   private:
     static bool eth_connected;
     static bool wifi_connected;
+
+    static void displayDetails();
+
+    static Display* d;
 };
 
 #endif

@@ -14,7 +14,7 @@ Button::Button(const String n, const uint8_t p, const uint8_t l)
   invert = false;
 }
 
-void Button::begin() {
+void Button::begin() {  
   pinMode(pin, INPUT);
   attachInterruptArg(pin, button_isr, this, FALLING);
   pinMode(LED_pin, OUTPUT);
@@ -32,8 +32,12 @@ void IRAM_ATTR Button::isr() {
     unsigned int i = 0;
     Serial.print("Button pressed: ");
     Serial.println(buttonName);
-    for( SCOSCMessage msg : OSC_messages ) {
-      OSC::queueOSCMessage(msg);
+    if( Config::mainLoopStarted ) { 
+      for( SCOSCMessage msg : OSC_messages ) {
+        OSC::queueOSCMessage(msg);
+      }
+    } else {
+      Config::mainLoopStarted = true;
     }
   }
 }

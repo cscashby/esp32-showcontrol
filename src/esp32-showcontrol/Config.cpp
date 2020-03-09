@@ -1,5 +1,7 @@
 #include "Config.h"
 
+bool Config::mainLoopStarted = false;
+
 Config::Config() {
   StaticJsonDocument<2500> doc;
   DeserializationError error = deserializeJson(doc, CONFIG_JSON);

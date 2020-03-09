@@ -11,6 +11,8 @@
 
 class Config {
   public:
+    static bool mainLoopStarted;
+  
     // TODO: Move to structs.h
     struct OSCSubscription {
       Button* button;
