@@ -11,13 +11,14 @@ void IRAM_ATTR button_isr(void* arg) {
 Button::Button(const String n, const uint8_t p, const uint8_t l)
       : buttonName(n), pin(p), LED_pin(l) { 
   buttonMap.insert(std::make_pair(p, this));
+  invert = false;
 }
 
 void Button::begin() {
   pinMode(pin, INPUT);
   attachInterruptArg(pin, button_isr, this, FALLING);
   pinMode(LED_pin, OUTPUT);
-  digitalWrite(LED_pin, false);
+  digitalWrite(LED_pin, invert);
 }
 
 void IRAM_ATTR Button::isr() {
@@ -25,7 +26,7 @@ void IRAM_ATTR Button::isr() {
   if( (now - debounceMillis) >= Config::getConfig().timers.switch_debounce_ms ) {
     debounceMillis = millis();
     pressed = true;
-    digitalWrite(LED_pin, true);
+    digitalWrite(LED_pin, !invert);
     ledLastChangeMillis = millis();
     char* m;
     unsigned int i = 0;
@@ -40,7 +41,7 @@ void IRAM_ATTR Button::isr() {
 void IRAM_ATTR Button::poll() {
   unsigned long now = millis();
   if( (now - ledLastChangeMillis) > Config::getConfig().timers.led_flash_ms ) {
-    digitalWrite(LED_pin, false);
+    digitalWrite(LED_pin, invert);
     ledLastChangeMillis = 0;
   }
 }

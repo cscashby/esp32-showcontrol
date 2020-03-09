@@ -57,6 +57,9 @@ Config::Config() {
     std::vector<String> cmds;
     
     Button b = Button(kv.key().c_str(), button["Button_pin"].as<uint8_t>(), button["LED_pin"].as<uint8_t>());
+    if( button.containsKey("LED_inverted") ) {
+      b.invert = button["LED_inverted"].as<bool>();
+    }
     if( button.containsKey("OSC_messages") ) {
       for( JsonVariant c : button["OSC_messages"].as<JsonArray>() ) {
         SCOSCMessage msg;

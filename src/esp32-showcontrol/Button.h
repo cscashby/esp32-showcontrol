@@ -23,6 +23,7 @@ class Button {
     const String buttonName;
     const uint8_t pin;
     const uint8_t LED_pin;
+    bool invert;
     
     std::vector<SCOSCMessage> OSC_messages;
 

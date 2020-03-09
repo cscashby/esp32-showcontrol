@@ -60,6 +60,7 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
     },
     "pause": {
       "LED_pin": 13,
+      "LED_inverted": true,
       "Button_pin": 34,
       "OSC_messages": [
         "/pause",
