@@ -8,19 +8,14 @@ const char WEBPAGE_ROOT[] PROGMEM = R"=====(
 <body>
   <h1>ESP32 Showcontrol unit</h1>
 
-  <h2>Stuff goes here</h2>
-
   <h2>Settings</h2>
-  <ul>
-    <li>
-      <form action="/new_ip" method="post" name="ip_form" id="ip_form">
-        <caption for="master_name">Name: </caption><input type="text" name="master_name" id="master_name" value="x"/><br/>
-        <caption for="master_ip">IP: </caption><input type="text" name="master_ip" id="master_ip" value="x"/><br/>
-        <caption for="master_port">Port: </caption><input type="text" name="master_port" id="master_port" value="x"/><br/>
-        <input type="button" value="Save" onclick="javascript:document.getElementById('ip_form').submit();"/>
-      </form>
-    </li>
-  </ul>
+  <h3>Master QLab machine</h3>
+  <form action="/set/master" method="post" name="master_form" id="master_form">
+    <caption for="master_name">Name: </caption><input type="text" name="master_name" id="master_name" value="x"/><br/>
+    <caption for="master_ip">IP: </caption><input type="text" name="master_ip" id="master_ip" value="x"/><br/>
+    <caption for="master_port">Port: </caption><input type="text" name="master_port" id="master_port" value="x"/><br/>
+    <input type="button" value="Save" onclick="javascript:document.getElementById('master_form').submit();"/>
+  </form>
 </body>
 
 </html>

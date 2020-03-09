@@ -78,7 +78,7 @@ void Network::begin(Display* d) {
   
   Network_webServer.on("/", Network::rootPage);
   Network_webServer.on("/main.js", Network::mainJS);
-  Network_webServer.on("/set/master_ip", Network::handle_setMasterIP);
+  Network_webServer.on("/set/master", Network::handle_setMaster);
   Network_webServer.on("/get", Network::handle_get);
   Network_webServer.onNotFound(Network::handle404);
   Network_webServer.begin();
@@ -98,12 +98,16 @@ void Network::mainJS() {
   Network_webServer.send(200, "text/javascript", MAINJS_ROOT);
 }
 
-void Network::handle_setMasterIP() {
+void Network::handle_setMaster() {
   if (Network_webServer.method() != HTTP_POST) {
     Network_webServer.send(405, "text/plain", "Method Not Allowed");
   } else {
-    Serial.println("New master IP: " + Network_webServer.arg("master_ip"));
-    Network_webServer.send(205, "text/plain", "POST body was:\n" + Network_webServer.arg("master_ip"));
+    // TODO: Definitely need to validate the form somehow!
+    Serial.println("New master: " + Network_webServer.arg("master_name") + " IP: " + Network_webServer.arg("master_ip") + ":" + Network_webServer.arg("master_port"));
+    Config::getConfig().network.master_host.name = Network_webServer.arg("master_name");
+    Config::getConfig().network.master_host.host = Network_webServer.arg("master_ip");
+    Config::getConfig().network.master_host.port = Network_webServer.arg("master_port").toInt();
+    Network_webServer.send(205, "text/plain");
   }
 }
 

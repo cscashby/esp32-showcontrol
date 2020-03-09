@@ -18,7 +18,7 @@ class Network {
     static void rootPage();
     static void mainJS();
     static void handle404();
-    static void handle_setMasterIP();
+    static void handle_setMaster();
     static void handle_get();
     
   private:
