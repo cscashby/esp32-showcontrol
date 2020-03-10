@@ -155,6 +155,11 @@ void Network::displayDetails() {
       d->tft->println(ETH.linkSpeed());
       d->tft->setCursor(77,38);
       d->tft->println(ETH.fullDuplex() ? "F" : "");
+      // TODO: Is there a timing issue here? Is config ready?
+      d->tft->setTextScale(1,1);
+      d->tft->setTextColor(YELLOW);
+      d->tft->print("m: ");
+      d->tft->println(Config::getConfig().network.master_host.host);
     } else {
       d->tft->setTextColor(RED);
       d->tft->setTextScale(2,2);
