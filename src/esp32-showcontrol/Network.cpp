@@ -136,6 +136,7 @@ void Network::handle404() {
 
 void Network::displayDetails() {
   // We only run this display update if the main loop is not running.
+  // TODO: Move to Display.h/cpp with parameterised text
   if( !Config::mainLoopStarted ) {
     d->clearTextArea();
     d->tft->setTextColor(WHITE);
@@ -146,13 +147,14 @@ void Network::displayDetails() {
     d->tft->setTextColor(BLUE);
     d->tft->println(ETH.macAddress());
     if( eth_connected ) {
-      d->tft->setTextColor(GREEN);
-      d->tft->print("IP: ");
+      d->tft->setTextColor(ETH.linkSpeed() == 100 ? GREEN : MAGENTA);
       d->tft->setTextScale(1,2);
-      d->tft->println(ETH.localIP());
+      d->tft->print(ETH.localIP());
       d->tft->setTextScale(1,1);
-      d->tft->print(ETH.linkSpeed());
-      d->tft->println(" Mbps" + ETH.fullDuplex() ? " FDX" : "");
+      d->tft->setCursor(77,31);
+      d->tft->println(ETH.linkSpeed());
+      d->tft->setCursor(77,38);
+      d->tft->println(ETH.fullDuplex() ? "F" : "");
     } else {
       d->tft->setTextColor(RED);
       d->tft->setTextScale(2,2);
