@@ -154,7 +154,7 @@ void Network::displayDetails() {
       d->tft->setCursor(77,31);
       d->tft->println(ETH.linkSpeed());
       d->tft->setCursor(77,38);
-      d->tft->println(ETH.fullDuplex() ? "F" : "");
+      d->tft->println(ETH.fullDuplex() ? "FDX" : "");
       // TODO: Is there a timing issue here? Is config ready?
       d->tft->setTextScale(1,1);
       d->tft->setTextColor(YELLOW);
