@@ -19,9 +19,9 @@ The good, the bad and the ugly of the creation process are [documented in this p
 
 The box wiring is currently soldered wires directly onto pushbuttons and LEDs, and soldered onto the OLED board.  [Pinouts are documented in a separate file for the ESP32-POE-ISO board](https://github.com/cscashby/esp32-showcontrol/blob/master/esp32-poe-iso-connections.md).
 
-## Development
+## Development
 
-### IDE Setup
+### IDE Setup
 
 To set up the [Arduino IDE](https://www.arduino.cc/en/main/software) to develop on the [ESP32-PoE-ISO](https://www.olimex.com/Products/IoT/ESP32/ESP32-POE-ISO/open-source-hardware) board, you will need the drivers from the manufacturer's website.
 
