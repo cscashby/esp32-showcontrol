@@ -2,11 +2,11 @@
 #include "Display.h"
 
 Display::Display() {
-  tft = new SSD_13XX(LCD_CS, LCD_DC, LCD_RST);
-  tft->begin();
 }
 
 void Display::begin() {
+  tft = new SSD_13XX(LCD_CS, LCD_DC, LCD_RST);
+  tft->begin();
 }
 
 void Display::loop() {
