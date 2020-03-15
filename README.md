@@ -26,3 +26,11 @@ The box wiring is currently soldered wires directly onto pushbuttons and LEDs, a
 To set up the [Arduino IDE](https://www.arduino.cc/en/main/software) to develop on the [ESP32-PoE-ISO](https://www.olimex.com/Products/IoT/ESP32/ESP32-POE-ISO/open-source-hardware) board, you will need the drivers from the manufacturer's website.
 
 You will also need the ESP32 default board set up through Board Manager within the Arduino IDE, [using these instructions](https://github.com/espressif/arduino-esp32/blob/master/docs/arduino-ide/boards_manager.md).
+
+In addition, you will need to install the following list of libraries, either from Libraries manager (version given at time of writing), or as ZIP/Folder from the URLs given:
+
+- SSD_13XX (Submodule)
+- ArduinoOSC (Submodule)
+- ArduinoJson (6.14.1)
+
+For Submodules, don't forget to download them after cloning with `git submodule update --init`
