@@ -1,3 +1,6 @@
 [submodule "lib/ArduinoOSC"]
 	path = lib/ArduinoOSC
 	url = git@github.com:hideakitai/ArduinoOSC.git
+[submodule "lib/SSD_13XX"]
+	path = lib/SSD_13XX
+	url = https://github.com/sumotoy/SSD_13XX
