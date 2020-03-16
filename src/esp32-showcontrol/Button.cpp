@@ -12,6 +12,7 @@ Button::Button(const String n, const uint8_t p, const uint8_t l)
       : buttonName(n), pin(p), LED_pin(l) { 
   buttonMap.insert(std::make_pair(p, this));
   invert = false;
+  debounceMillis = millis();
 }
 
 void Button::begin() {  
