@@ -13,7 +13,9 @@ It communicates via one ore more QLab machines via OSC over UDP and (not yet imp
 
 The control box has a display (The first iteration has a 0.94-0.96" screen which can display 3-4 lines of text) and will show the currently playing and next cue, although this is customizable, as well as a 'heartbeat' indicator to show QLab is running and accepting network traffic.
 
-The good, the bad and the ugly of the creation process are [documented in this photo album](https://photos.app.goo.gl/oM8NKtMR5yHytawS9).  [You can see the current version in action here](https://youtu.be/rc1Ihym0WEM?fbclid=IwAR3Ep9oDbkkQK5u_lBfwsQPnMIx6SqTjP9gkLyZevePxKnQPljE5RvLPe-E).
+The good, the bad and the ugly of the creation process are [documented in this photo album](https://photos.app.goo.gl/oM8NKtMR5yHytawS9).
+
+[You can see the current version in action here](https://youtu.be/rc1Ihym0WEM?fbclid=IwAR3Ep9oDbkkQK5u_lBfwsQPnMIx6SqTjP9gkLyZevePxKnQPljE5RvLPe-E).
 
 ## Known issues
 
