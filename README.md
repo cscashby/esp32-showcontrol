@@ -15,6 +15,13 @@ The control box has a display (The first iteration has a 0.94-0.96" screen which
 
 The good, the bad and the ugly of the creation process are [documented in this photo album](https://photos.app.goo.gl/oM8NKtMR5yHytawS9).
 
+## Known issues
+
+Check out the [GitHub issues page](https://github.com/cscashby/esp32-showcontrol/issues)
+
+Key show-stopper(s) right now:
+- [Keys auto-repeat](https://github.com/cscashby/esp32-showcontrol/issues/5)
+
 ## Wiring
 
 The box wiring is currently soldered wires directly onto pushbuttons and LEDs, and soldered onto the OLED board.  [Pinouts are documented in a separate file for the ESP32-POE-ISO board](https://github.com/cscashby/esp32-showcontrol/blob/master/esp32-poe-iso-connections.md).
