@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <map>
+#include <vector>
 
 #include "OSC.h"
 #include "const.h"

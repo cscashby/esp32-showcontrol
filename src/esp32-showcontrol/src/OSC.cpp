@@ -1,10 +1,7 @@
 #include "OSC.h"
 #include "config.h"
 
-#include <ArduinoOSC.h>
-
-// This should be in OSC.h but needs ArduinoOSC.h which is broken so can't be included in the .h file
-static OscWiFi osc;
+#include <ArduinoOSCEther.h>
 
 std::deque<SCOSCMessage> OSC::currentQueue;
 Display* OSC::d;
@@ -33,13 +30,12 @@ void IRAM_ATTR OSC::queueOSCMessage(SCOSCMessage msg) {
 
 void OSC::begin(Display* d) {
   OSC::d = d;
-  osc.begin(Config::getConfig().network.osc_listen_port);
   // Hard coded replies
-  osc.subscribe("/reply/workspace/*/thump", [](OscMessage& m) {
+  OscEther.subscribe(Config::getConfig().network.osc_listen_port, "/reply/workspace/*/thump", [](OscMessage& m) {
     // We could collapse this by redefining heartbeatReply() with OscMessage param, but can't due to ArduinoOSC.h include issue
     OSC::heartbeatReply();  
   });
-  osc.subscribe("/update/workspace/*/cueList/*/playbackPosition", [](OscMessage& m) {
+  OscEther.subscribe(Config::getConfig().network.osc_listen_port, "/update/workspace/*/cueList/*/playbackPosition", [](OscMessage& m) {
     // We copy the address as we don't want to break the string when we tokenise it
     String addr = m.address();
     String json = m.arg<String>(0);
@@ -79,7 +75,7 @@ void OSC::begin(Display* d) {
       OSC::updateDisplay();
     }
   });
-  osc.subscribe("/reply/cue_id/*/displayName", [](OscMessage& m) {
+  OscEther.subscribe(Config::getConfig().network.osc_listen_port, "/reply/cue_id/*/displayName", [](OscMessage& m) {
     // We copy the address as we don't want to break the string when we tokenise it
     String addr = m.address();
     char sizeString[] = "/reply/cue_id/0FD30761-96F0-4C1E-AD1A-155DEB772604/displayName";
@@ -125,7 +121,7 @@ void OSC::begin(Display* d) {
     }
     OSC::updateDisplay();
   });
-  osc.subscribe("/reply/workspace/*/runningOrPausedCues", [](OscMessage& m) {
+  OscEther.subscribe(Config::getConfig().network.osc_listen_port, "/reply/workspace/*/runningOrPausedCues", [](OscMessage& m) {
     // We copy the address as we don't want to break the string when we tokenise it
     String addr = m.address();
     char sizeString[] = "/workspace/FBD9B081-1C68-4C9C-8B74-98712F4DD90B/runningOrPausedCues";
@@ -181,7 +177,7 @@ void OSC::loop() {
         if( msg.has_arg_int )
           o.push(msg.arg_int);
         
-        osc.send(o);
+        //OscEther.send(o);
       }
     if( !msg.wait_for_heartbeat || OSC::heartBeatOK )
       currentQueue.pop_front();
@@ -189,15 +185,13 @@ void OSC::loop() {
   // TODO: Support secondary hosts for some messages
   Config::OSCHost h = Config::getConfig().network.master_host;
   if( OSC::sendHeartBeat ) {
-    OscMessage o1(h.host, h.port, "/thump");
-    osc.send(o1);
-    OscMessage o2(h.host, h.port, "/runningOrPausedCues");
-    osc.send(o2);
+    OscEther.send(h.host, h.port, "/thump");
+    OscEther.send(h.host, h.port, "/runningOrPausedCues");
   }
   if( OSC::sendHeartBeat )
     OSC::sendHeartBeat = false;
   yield();
-  osc.parse();  
+  //osc.parse();  
 }
 
 void OSC::updateDisplay() {

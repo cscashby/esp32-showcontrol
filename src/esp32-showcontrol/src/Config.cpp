@@ -16,7 +16,7 @@ Config::Config() {
 
   //serializeJson(doc, Serial);
   JsonObject net = doc.as<JsonObject>()["network"].as<JsonObject>();
-  network.hostname = net["hostname"].as<char*>();
+  network.hostname = net["hostname"].as<String>();
   JsonObject jo_master = net["master_host"].as<JsonObject>();
   network.master_host.name = jo_master["name"].as<String>();
   network.master_host.host = jo_master["host"].as<String>();
@@ -44,7 +44,7 @@ Config::Config() {
   JsonArray startOSC = general["start_osc"].as<JsonArray>();
   for( JsonObject osco : startOSC ) {
     SCOSCMessage oscm = {
-      .command = osco["string"].as<char*>(),
+      .command = osco["string"].as<String>(),
       .has_arg_int = osco.containsKey("arg_int")
     };
     if( oscm.has_arg_int )
@@ -65,14 +65,14 @@ Config::Config() {
     if( button.containsKey("OSC_messages") ) {
       for( JsonVariant c : button["OSC_messages"].as<JsonArray>() ) {
         SCOSCMessage msg;
-        msg.command = c.as<char*>();
+        msg.command = c.as<String>();
         b.OSC_messages.push_back(msg);
       }
     }
     Config::OSCSubscription sub = {
       .button = &b,
-      .string = button["OSC_subscribe"]["string"].as<char*>(),
-      .type = button["OSC_subscribe"]["type"].as<char*>()
+      .string = button["OSC_subscribe"]["string"].as<String>(),
+      .type = button["OSC_subscribe"]["type"].as<String>()
     };
     this->OSCsubscriptions.push_back(sub);
     this->buttons.push_back(b);
