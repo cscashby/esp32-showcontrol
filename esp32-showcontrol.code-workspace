@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "src/esp32-showcontrol"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}
