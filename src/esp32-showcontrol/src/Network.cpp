@@ -43,17 +43,17 @@ void Network::WiFiEvent(WiFiEvent_t event)
       eth_connected = false;
       Network::displayDetails();
       break;
-    case ARDUINO_WIFI_EVENT_STA_CONNECTED:
+    case ARDUINO_EVENT_WIFI_STA_CONNECTED:
       Serial.println("WiFi AP connected");
       wifi_connected = true;
       Network::displayDetails();
       break;
-    case ARDUINO_WIFI_EVENT_STA_DISCONNECTED:
+    case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
       Serial.println("WiFi AP disconnected");
       wifi_connected = false;
       Network::displayDetails();
       break;
-    case ARDUINO_WIFI_EVENT_STA_GOT_IP:
+    case ARDUINO_EVENT_WIFI_STA_GOT_IP:
       Serial.print("WiFi MAC: ");
       Serial.print(WiFi.macAddress());
       Serial.print(", IPv4: ");
@@ -61,7 +61,7 @@ void Network::WiFiEvent(WiFiEvent_t event)
       wifi_connected = true;
       Network::displayDetails();
       break;
-    case ARDUINO_WIFI_EVENT_STA_LOST_IP:
+    case ARDUINO_EVENT_WIFI_STA_LOST_IP:
       Serial.println("WiFi AP lost IP");
       wifi_connected = false;
       Network::displayDetails();
