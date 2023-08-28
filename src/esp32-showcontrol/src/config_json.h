@@ -3,8 +3,8 @@ const char CONFIG_JSON[] PROGMEM = R"=====(
   "network": {
     "hostname": "esp32-showcontrol",
     "master_host": {
-      "name": "test-imac",
-      "host": "192.168.5.104",
+      "name": "ca-mbp",
+      "host": "10.18.100.102",
       "port": 53000
     },
     "secondary_hosts": [

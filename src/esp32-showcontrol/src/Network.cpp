@@ -11,15 +11,15 @@ Display* Network::d = NULL;
 void Network::WiFiEvent(WiFiEvent_t event)
 {
   switch (event) {
-    case SYSTEM_EVENT_ETH_START:
+    case ARDUINO_EVENT_ETH_START:
       Serial.println("ETH Started");
       Network::displayDetails();
       break;
-    case SYSTEM_EVENT_ETH_CONNECTED:
+    case ARDUINO_EVENT_ETH_CONNECTED:
       Serial.println("ETH Connected");
       Network::displayDetails();
       break;
-    case SYSTEM_EVENT_ETH_GOT_IP:
+    case ARDUINO_EVENT_ETH_GOT_IP:
       Serial.print("ETH MAC: ");
       Serial.print(ETH.macAddress());
       Serial.print(", IPv4: ");
@@ -33,27 +33,27 @@ void Network::WiFiEvent(WiFiEvent_t event)
       eth_connected = true;
       Network::displayDetails();
       break;
-    case SYSTEM_EVENT_ETH_DISCONNECTED:
+    case ARDUINO_EVENT_ETH_DISCONNECTED:
       Serial.println("ETH Disconnected");
       eth_connected = false;
       Network::displayDetails();
       break;
-    case SYSTEM_EVENT_ETH_STOP:
+    case ARDUINO_EVENT_ETH_STOP:
       Serial.println("ETH Stopped");
       eth_connected = false;
       Network::displayDetails();
       break;
-    case SYSTEM_EVENT_STA_CONNECTED:
+    case ARDUINO_WIFI_EVENT_STA_CONNECTED:
       Serial.println("WiFi AP connected");
       wifi_connected = true;
       Network::displayDetails();
       break;
-    case SYSTEM_EVENT_STA_DISCONNECTED:
+    case ARDUINO_WIFI_EVENT_STA_DISCONNECTED:
       Serial.println("WiFi AP disconnected");
       wifi_connected = false;
       Network::displayDetails();
       break;
-    case SYSTEM_EVENT_STA_GOT_IP:
+    case ARDUINO_WIFI_EVENT_STA_GOT_IP:
       Serial.print("WiFi MAC: ");
       Serial.print(WiFi.macAddress());
       Serial.print(", IPv4: ");
@@ -61,7 +61,7 @@ void Network::WiFiEvent(WiFiEvent_t event)
       wifi_connected = true;
       Network::displayDetails();
       break;
-    case SYSTEM_EVENT_STA_LOST_IP:
+    case ARDUINO_WIFI_EVENT_STA_LOST_IP:
       Serial.println("WiFi AP lost IP");
       wifi_connected = false;
       Network::displayDetails();
