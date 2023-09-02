@@ -29,7 +29,7 @@ void IRAM_ATTR pollTimerISR() {
 }
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(460800);
   esp_log_level_set("*", ESP_LOG_DEBUG);
 
   // No OSC yet - we wait for a button press

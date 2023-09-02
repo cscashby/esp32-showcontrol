@@ -185,8 +185,10 @@ void OSC::loop() {
   // TODO: Support secondary hosts for some messages
   Config::OSCHost h = Config::getConfig().network.master_host;
   if( OSC::sendHeartBeat ) {
+    noInterrupts();
     OscEther.send(h.host, h.port, "/thump");
-    OscEther.send(h.host, h.port, "/runningOrPausedCues");
+    //OscEther.send(h.host, h.port, "/runningOrPausedCues");
+    interrupts();
   }
   if( OSC::sendHeartBeat )
     OSC::sendHeartBeat = false;
